@@ -82,6 +82,10 @@ class MainViewModel : ViewModel() {
         CalculatorLogic.onPushButtonPercent()
     }
 
+    fun onPushButtonEquals() {
+        CalculatorLogic.onPushButtonEquals()
+    }
+
 
 
 

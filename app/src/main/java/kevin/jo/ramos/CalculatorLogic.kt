@@ -172,6 +172,187 @@ object CalculatorLogic {
 
     //Equals Function
     fun onPushButtonEquals() {
+        val operatorsString: String = "+-✕÷"
+        if (expression.value == "") { }
+        else if (operatorsString.contains(expression.value?.last().toString() ) ) { }
+        else {
+            val separatedTerms: List<String> = separateTerms()
+            val postFixExpression: List<String> = infixToPostfix(separatedTerms)
+            val computation: Float = computePostFix(postFixExpression)
 
+            expression.value = computation.toString()
+        }
+
+
+    }
+
+
+    private fun separateTerms(): List<String> {
+        val operatorsString: String = "+-✕÷"
+        val numbersString: String = "1234567890."
+        val termsList: MutableList<String> = mutableListOf("")
+
+        if (expression.value != null) {
+            val value = expression.value
+
+            //Main Code: Convert the string into a list of strings
+            //separating operators and operands.
+
+            if (value != null) {
+
+                var j: Int = 0
+                for (i in 0 until value.length) {
+
+
+                    if (numbersString.contains(value[i]) ) {
+                        termsList[j] = termsList[j].plus(value[i])
+
+                    } else {
+                        termsList.addAll(listOf<String>(value[i].toString(), ""))
+                        j += 2
+                    }
+                }
+            }
+        }
+        Log.i("CalculatorLogic","$termsList")
+        return termsList
+    }
+
+    fun infixToPostfix(separatedTerms: List<String>): List<String> {
+
+        val operatorsString: String = "-+÷✕"
+        val operatorStack = mutableListOf<String>()
+        val postfixExpression = mutableListOf<String>()
+
+        for (term in separatedTerms) {
+            if (term == "+") {
+                if (operatorStack.isEmpty()) operatorStack.add(term)
+                else if ("-+".contains(operatorStack.last())) {
+                    operatorStack.add(term)
+                } else {
+                    while (operatorStack.size != 0) {
+                        postfixExpression.add(operatorStack.removeLast())
+                    }
+                    operatorStack.add(term)
+                }
+                continue
+            }
+
+            if (term == "-") {
+                if (operatorStack.isEmpty()) operatorStack.add(term)
+                else if ("-".contains(operatorStack.last())) {
+                    operatorStack.add(term)
+                } else {
+                    while (operatorStack.size != 0) {
+                        postfixExpression.add(operatorStack.removeLast())
+                    }
+                    operatorStack.add(term)
+                }
+                continue
+            }
+
+            if (term == "÷") {
+                if (operatorStack.isEmpty()) operatorStack.add(term)
+                else if ("-+÷".contains(operatorStack.last())) {
+                    operatorStack.add(term)
+                } else {
+                    while (operatorStack.size != 0) {
+                        postfixExpression.add(operatorStack.removeLast())
+                    }
+                    operatorStack.add(term)
+                }
+                continue
+            }
+
+            if (term == "✕") {
+                if (operatorStack.isEmpty()) operatorStack.add(term)
+                else if ("-+÷✕".contains(operatorStack.last())) {
+                    operatorStack.add(term)
+                }
+                continue
+            }
+
+            postfixExpression.add(term)
+        }
+
+        while (operatorStack.size != 0) {
+            postfixExpression.add(operatorStack.removeLast())
+        }
+
+        Log.i("CalculatorLogic","$postfixExpression")
+
+        return postfixExpression
+
+    }
+
+    fun computePostFix(postFixExpression: List<String>): Float {
+        val operatorsString: String = "-+÷✕"
+        val newExpression: MutableList<String> = mutableListOf()
+        var answer: Float = 0.0F
+
+        //Base Case
+        if (postFixExpression.size == 3) {
+            val operand1 = postFixExpression[0].toFloat()
+            val operand2 = postFixExpression[1].toFloat()
+            val operator = postFixExpression[2]
+
+            if (operator == "+") {
+                answer = operand1.plus(operand2)
+            }
+
+            if (operator == "-") {
+                answer = operand1.minus(operand2)
+            }
+
+            if (operator == "÷") {
+                answer = operand1.div(operand2)
+            }
+
+            if (operator == "✕") {
+                answer = operand1.times(operand2)
+            }
+
+            return answer.toFloat()
+
+
+        }
+
+        //Search for first Number-Number-Operator couple, and resolve it
+        for (i in 2 until postFixExpression.size) {
+            if (operatorsString.contains(postFixExpression[i])) {
+                if (!operatorsString.contains(postFixExpression[i-1])
+                    && !operatorsString.contains(postFixExpression[i-2])) {
+                    val operand1: Float = postFixExpression[i-2].toFloat()
+                    val operand2: Float = postFixExpression[i-1].toFloat()
+                    val operator: String = postFixExpression[i]
+
+                    if (operator == "+") {
+                        answer = operand1.plus(operand2)
+                    }
+
+                    if (operator == "-") {
+                        answer = operand1.minus(operand2)
+                    }
+
+                    if (operator == "÷") {
+                        answer = operand1.div(operand2)
+                    }
+
+                    if (operator == "✕") {
+                        answer = operand1.times(operand2)
+                    }
+                    newExpression.addAll(postFixExpression.take(i - 2))
+
+                    newExpression.add(answer.toString())
+
+                    newExpression.addAll(postFixExpression.drop(i + 1))
+
+                    Log.i("CalculatorLogic","$newExpression")
+                    break
+                }
+            }
+        }
+
+        return computePostFix(newExpression)
     }
 }
