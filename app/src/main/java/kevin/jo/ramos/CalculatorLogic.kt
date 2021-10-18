@@ -240,9 +240,7 @@ object CalculatorLogic {
 
             if (term == "-") {
                 if (operatorStack.isEmpty()) operatorStack.add(term)
-                else if ("-".contains(operatorStack.last())) {
-                    operatorStack.add(term)
-                } else {
+                else {
                     while (operatorStack.size != 0) {
                         postfixExpression.add(operatorStack.removeLast())
                     }
