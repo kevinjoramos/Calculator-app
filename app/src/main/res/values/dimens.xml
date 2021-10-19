@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="numBtn_height">64dp</dimen>
-    <dimen name="button_textSize">20sp</dimen>>
+    <dimen name="button_textSize">25sp</dimen>>
 </resources>

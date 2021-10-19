@@ -12,7 +12,7 @@ object CalculatorLogic {
     //val expressionAsList: MutableList<String> = mutableListOf()
 
     init {
-        expression.value = ""
+        expression.value = "0"
     }
 
     //Number Buttons:
