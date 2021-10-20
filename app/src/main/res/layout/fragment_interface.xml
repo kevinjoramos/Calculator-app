@@ -5,6 +5,7 @@
     android:background="@color/obsidian_100">
 
     <data>
+
         <variable
             name="viewmodel"
             type="kevin.jo.ramos.MainViewModel" />
@@ -20,8 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/obsidian_100"
-            android:text="0"
-            android:textAlignment="textEnd"
+            android:gravity="bottom|right"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@{viewmodel.currentHistoryString.toString()}"
             android:textColor="@color/white"
             android:textSize="25sp"
             app:layout_constraintBottom_toTopOf="@+id/operation_text"
@@ -34,6 +37,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/obsidian_100"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:text="@{viewmodel.currentExpression.toString()}"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
@@ -48,7 +53,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/obsidian_100"
-            android:text=""
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@{'=' + viewmodel.currentAnswerString.toString()}"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
             android:textSize="32sp"
@@ -63,13 +70,13 @@
             style="@style/calculator_button"
             android:onClick="@{() -> viewmodel.onPushButton0()}"
             android:text="@string/button0_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_point"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_blank"
-            app:layout_constraintTop_toBottomOf="@+id/button_2"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_2" />
 
         <Button
             android:id="@+id/button_1"
@@ -77,39 +84,39 @@
             android:layout_marginStart="1dp"
             android:onClick="@{() -> viewmodel.onPushButton1()}"
             android:text="@string/button1_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_blank"
             app:layout_constraintEnd_toStartOf="@+id/button_2"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_4"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_4" />
 
         <Button
             android:id="@+id/button_2"
             style="@style/calculator_button"
             android:onClick="@{() -> viewmodel.onPushButton2()}"
             android:text="@string/button2_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_0"
             app:layout_constraintEnd_toStartOf="@+id/button_3"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_1"
-            app:layout_constraintTop_toBottomOf="@+id/button_5"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_5" />
 
         <Button
             android:id="@+id/button_3"
             style="@style/calculator_button"
             android:onClick="@{() -> viewmodel.onPushButton3()}"
             android:text="@string/button3_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_point"
             app:layout_constraintEnd_toStartOf="@+id/button_add"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_2"
-            app:layout_constraintTop_toBottomOf="@+id/button_6"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_6" />
 
         <Button
             android:id="@+id/button_4"
@@ -117,39 +124,39 @@
             android:layout_marginStart="1dp"
             android:onClick="@{() -> viewmodel.onPushButton4()}"
             android:text="@string/button4_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_1"
             app:layout_constraintEnd_toStartOf="@+id/button_5"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_7"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_7" />
 
         <Button
             android:id="@+id/button_5"
             style="@style/calculator_button"
             android:onClick="@{() -> viewmodel.onPushButton5()}"
             android:text="@string/button5_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_2"
             app:layout_constraintEnd_toStartOf="@+id/button_6"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_4"
-            app:layout_constraintTop_toBottomOf="@+id/button_8"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_8" />
 
         <Button
             android:id="@+id/button_6"
             style="@style/calculator_button"
             android:onClick="@{() -> viewmodel.onPushButton6()}"
             android:text="@string/button6_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_3"
             app:layout_constraintEnd_toStartOf="@+id/button_subtract"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_5"
-            app:layout_constraintTop_toBottomOf="@+id/button_9"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_9" />
 
         <Button
             android:id="@+id/button_7"
@@ -159,39 +166,39 @@
             android:layout_marginStart="1dp"
             android:onClick="@{() -> viewmodel.onPushButton7()}"
             android:text="@string/button7_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_4"
             app:layout_constraintEnd_toStartOf="@+id/button_8"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_clear"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_clear" />
 
         <Button
             android:id="@+id/button_8"
             style="@style/calculator_button"
             android:onClick="@{() -> viewmodel.onPushButton8()}"
             android:text="@string/button8_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_5"
             app:layout_constraintEnd_toStartOf="@+id/button_9"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_7"
-            app:layout_constraintTop_toBottomOf="@+id/button_delete"
-            android:textColor="@color/purple_100" />
+            app:layout_constraintTop_toBottomOf="@+id/button_delete" />
 
         <Button
             android:id="@+id/button_9"
             style="@style/calculator_button"
             android:onClick="@{() -> viewmodel.onPushButton9()}"
             android:text="@string/button9_text"
+            android:textColor="@color/purple_100"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_6"
             app:layout_constraintEnd_toStartOf="@+id/button_multiply"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_8"
-            app:layout_constraintTop_toBottomOf="@+id/button_percent"
-            android:textColor="@color/purple_100"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_percent" />
 
         <Button
             android:id="@+id/button_clear"

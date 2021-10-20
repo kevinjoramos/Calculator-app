@@ -6,59 +6,82 @@ import androidx.lifecycle.MutableLiveData
 import kotlin.math.exp
 
 object CalculatorLogic {
+    //The expression being typed into the calculator by user.
     private val expression = MutableLiveData<String>()
     val currentExpression: LiveData<String>
             get() = expression
-    //val expressionAsList: MutableList<String> = mutableListOf()
+
+    //The expression containing the answer to the expression.
+    private val answerString = MutableLiveData<String>()
+    val currentAnswerString: LiveData<String>
+        get() = answerString
+
+    //List of past expressions with their answers.
+    private val historyString = MutableLiveData<String>()
+    val currentHistoryString: LiveData<String>
+        get() = historyString
 
     init {
         expression.value = "0"
+        answerString.value = ""
+        historyString.value = ""
     }
 
     //Number Buttons:
     fun onPushButton0() {
         expression.value = expression.value.plus("0")
+        updateAnswerString()
     }
 
     fun onPushButton1() {
         expression.value = expression.value.plus("1")
+        updateAnswerString()
     }
 
     fun onPushButton2() {
         expression.value = expression.value.plus("2")
+        updateAnswerString()
     }
 
     fun onPushButton3() {
         expression.value = expression.value.plus("3")
+        updateAnswerString()
     }
 
     fun onPushButton4() {
         expression.value = expression.value.plus("4")
+        updateAnswerString()
     }
 
     fun onPushButton5() {
         expression.value = expression.value.plus("5")
+        updateAnswerString()
     }
 
     fun onPushButton6() {
         expression.value = expression.value.plus("6")
+        updateAnswerString()
     }
 
     fun onPushButton7() {
         expression.value = expression.value.plus("7")
+        updateAnswerString()
     }
 
     fun onPushButton8() {
         expression.value = expression.value.plus("8")
+        updateAnswerString()
     }
 
     fun onPushButton9() {
         expression.value = expression.value.plus("9")
+        updateAnswerString()
     }
 
     //Utility Buttons:
     fun onPushButtonClear() {
         expression.value = ""
+        answerString.value = ""
     }
 
     fun onPushButtonDelete() {
@@ -176,8 +199,12 @@ object CalculatorLogic {
         if (expression.value == "") { }
         else if (operatorsString.contains(expression.value?.last().toString() ) ) { }
         else {
+
             val separatedTerms: List<String> = separateTerms()
+            if (separatedTerms.size == 1) { return }
+
             val postFixExpression: List<String> = infixToPostfix(separatedTerms)
+
             val computation: Float = computePostFix(postFixExpression)
 
             expression.value = computation.toString()
@@ -185,7 +212,6 @@ object CalculatorLogic {
 
 
     }
-
 
     private fun separateTerms(): List<String> {
         val operatorsString: String = "+-✕÷"
@@ -352,5 +378,30 @@ object CalculatorLogic {
         }
 
         return computePostFix(newExpression)
+    }
+
+    //Answer Text View
+    fun updateAnswerString(){
+
+
+        val separatedTerms: List<String> = separateTerms()
+        if (separatedTerms.size == 1) { answerString.value = separatedTerms[0]; return }
+
+        val postFixExpression: List<String> = infixToPostfix(separatedTerms)
+        val computation: Float = computePostFix(postFixExpression)
+
+        answerString.value = computation.toString()
+        Log.i("CalculatorLogic", "Update Answer String ${answerString.value}")
+
+
+
+
+
+    }
+
+    //History Text View
+    private fun updateHistoryString() {
+
+
     }
 }

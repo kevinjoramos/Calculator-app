@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
     val currentExpression: LiveData<String> = CalculatorLogic.currentExpression
+    val currentHistoryString: LiveData<String> = CalculatorLogic.currentHistoryString
+    val currentAnswerString: LiveData<String> = CalculatorLogic.currentAnswerString
 
     //Number Buttons:
     fun onPushButton0() {
