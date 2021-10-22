@@ -8,5 +8,9 @@
     <color name="purple_100">#FF483699</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="shy_white">#66FFFFFF</color>
+    <color name="seclusive_white">#44FFFFFF</color>
+
+
 
 </resources>

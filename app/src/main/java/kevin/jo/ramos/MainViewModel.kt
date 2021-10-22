@@ -10,44 +10,8 @@ class MainViewModel : ViewModel() {
     val currentAnswerString: LiveData<String> = CalculatorLogic.currentAnswerString
 
     //Number Buttons:
-    fun onPushButton0() {
-        CalculatorLogic.onPushButton0()
-    }
-
-    fun onPushButton1() {
-        CalculatorLogic.onPushButton1()
-    }
-
-    fun onPushButton2() {
-        CalculatorLogic.onPushButton2()
-    }
-
-    fun onPushButton3() {
-        CalculatorLogic.onPushButton3()
-    }
-
-    fun onPushButton4() {
-        CalculatorLogic.onPushButton4()
-    }
-
-    fun onPushButton5() {
-        CalculatorLogic.onPushButton5()
-    }
-
-    fun onPushButton6() {
-        CalculatorLogic.onPushButton6()
-    }
-
-    fun onPushButton7() {
-        CalculatorLogic.onPushButton7()
-    }
-
-    fun onPushButton8() {
-        CalculatorLogic.onPushButton8()
-    }
-
-    fun onPushButton9() {
-        CalculatorLogic.onPushButton9()
+    fun onPushNumberButton(char: String) {
+        CalculatorLogic.onPushNumberButton(char)
     }
 
     //Utility Buttons:
@@ -64,20 +28,8 @@ class MainViewModel : ViewModel() {
     }
 
     //Operator Buttons:
-    fun onPushButtonAdd() {
-        CalculatorLogic.onPushButtonAdd()
-    }
-
-    fun onPushButtonSubtract() {
-        CalculatorLogic.onPushButtonSubtract()
-    }
-
-    fun onPushButtonMultiply() {
-        CalculatorLogic.onPushButtonMultiply()
-    }
-
-    fun onPushButtonDivide() {
-        CalculatorLogic.onPushButtonDivide()
+    fun onPushButtonOperator(char: String) {
+        CalculatorLogic.onPushButtonOperator(char)
     }
 
     fun onPushButtonPercent() {
