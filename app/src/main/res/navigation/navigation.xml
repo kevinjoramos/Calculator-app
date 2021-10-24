@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
     app:startDestination="@id/interfaceFragment">
 
     <fragment
         android:id="@+id/interfaceFragment"
         android:name="kevin.jo.ramos.InterfaceFragment"
-        android:label="InterfaceFragment" />
+        android:label="InterfaceFragment" >
+        <action
+            android:id="@+id/action_interfaceFragment_to_expandedInterfaceFragment"
+            app:destination="@id/expandedInterfaceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/expandedInterfaceFragment"
+        android:name="kevin.jo.ramos.ExpandedInterfaceFragment"
+        android:label="fragment_expanded_interface"
+        tools:layout="@layout/fragment_expanded_interface" >
+        <action
+            android:id="@+id/action_expandedInterfaceFragment_to_interfaceFragment"
+            app:destination="@id/interfaceFragment"
+            app:popUpTo="@id/interfaceFragment" />
+    </fragment>
 </navigation>

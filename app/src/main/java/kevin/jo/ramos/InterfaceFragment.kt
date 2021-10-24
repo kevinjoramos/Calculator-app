@@ -15,7 +15,8 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.viewbinding.ViewBinding
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import kevin.jo.ramos.databinding.FragmentInterfaceBinding
 
 class InterfaceFragment : Fragment() {
@@ -26,6 +27,8 @@ class InterfaceFragment : Fragment() {
     ): View? {
 
         val viewModel: MainViewModel by viewModels()
+
+        val navController = findNavController()
 
         val binding: FragmentInterfaceBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_interface, container, false
@@ -54,6 +57,9 @@ class InterfaceFragment : Fragment() {
         binding.buttonMultiply.setOnClickListener { onPushOperatorButton(it, binding, viewModel) }
         binding.buttonPercent.setOnClickListener { viewModel.onPushButtonPercent() }
         binding.buttonEqual.setOnClickListener { onPushEquals(binding, viewModel)}
+
+        //open advanced calulator
+        binding.buttonBlank.setOnClickListener { openScientificCalculator(navController) }
 
 
         //Answer string observer.
@@ -135,6 +141,10 @@ class InterfaceFragment : Fragment() {
 
         binding.answerText.setTextSize(32F)
         binding.answerText.setTextColor(Color.parseColor("#66FFFFFF"))
+    }
+
+    private fun openScientificCalculator(navController: NavController) {
+        navController.navigate(R.id.action_interfaceFragment_to_expandedInterfaceFragment)
     }
 
 
