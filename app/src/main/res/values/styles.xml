@@ -8,4 +8,13 @@
         <item name="android:background">@color/Grey_100</item>
         <item name="android:textSize">@dimen/button_textSize</item>
     </style>
+
+    <style name="scientific_button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:backgroundTint">@null</item>
+        <item name="android:background">@color/Grey_100</item>
+        <item name="android:textSize">@dimen/Abutton_textSize</item>
+    </style>
 </resources>
