@@ -1,9 +1,8 @@
-package kevin.jo.ramos
+package kevin.jo.ramos.Model
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlin.math.exp
 
 object CalculatorLogic {
     //Value used to know if operation is over, and if a new one can start.
@@ -91,37 +90,19 @@ object CalculatorLogic {
     }
 
     fun onPushButtonPercent() {
-
-
         //Case where no number has been input yet.
-        if (expression.value == "") {
-            expression.value = ""
 
-        } else if (operatorString.contains(expression.value?.last().toString())) {
+        if (expression.value == "") return
+
+        if (operatorString.contains(expression.value?.last().toString())) return
             //Nothing happens when the most recent character typed in was
             //an operator
-        } else {
 
+        val terms = separateTerms()
+        val percentage: Float = terms.last().toFloat().div(100)
+        val offset = terms.last().length
 
-            //replace all operators with spaces so that the numbers are grouped.
-            val operatorsRemoved: String? =
-                expression.value?.replace("+", " ")?.replace("-", " ")?.replace("×", " ")
-                    ?.replace("÷", " ")
-
-
-            //each number is separated into a list with the split.
-            if (operatorsRemoved != null) {
-                val numbersListed = operatorsRemoved.split(" ")
-                val percentage = numbersListed.last().toFloat().div(100)
-
-                //we need the length of the original number so we now how much
-                //of the string we need to replace.
-                val offset = numbersListed.last().length
-
-
-                expression.value = expression.value?.dropLast(offset).plus(percentage.toString())
-            }
-        }
+        expression.value = expression.value?.dropLast(offset).plus(percentage.toString() )
     }
 
     //Equals Function
@@ -156,7 +137,6 @@ object CalculatorLogic {
                 }
             }
         }
-        Log.i("CalculatorLogic","$termsList")
         return termsList
     }
 
@@ -216,8 +196,6 @@ object CalculatorLogic {
         while (operatorStack.size != 0) {
             postfixExpression.add(operatorStack.removeLast())
         }
-
-        Log.i("CalculatorLogic","$postfixExpression")
 
         return postfixExpression
 

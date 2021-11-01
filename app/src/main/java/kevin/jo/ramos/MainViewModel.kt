@@ -1,10 +1,13 @@
 package kevin.jo.ramos
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kevin.jo.ramos.Model.CalculatorLogic
+import kevin.jo.ramos.Model.HistoryRepository
 
 class MainViewModel : ViewModel() {
+    val historyRepository = HistoryRepository()
+
     val currentExpression: LiveData<String> = CalculatorLogic.currentExpression
     val currentHistoryString: LiveData<String> = CalculatorLogic.currentHistoryString
     val currentAnswerString: LiveData<String> = CalculatorLogic.currentAnswerString

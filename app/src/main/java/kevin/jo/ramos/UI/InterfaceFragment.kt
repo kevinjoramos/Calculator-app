@@ -1,32 +1,27 @@
-package kevin.jo.ramos
+package kevin.jo.ramos.UI
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
-import android.view.Display
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.SimpleAdapter
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import kevin.jo.ramos.MainViewModel
+import kevin.jo.ramos.R
 import kevin.jo.ramos.databinding.FragmentInterfaceBinding
 
 class InterfaceFragment : Fragment() {
+
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val viewModel: MainViewModel by viewModels()
 
         val navController = findNavController()
 
@@ -72,13 +67,14 @@ class InterfaceFragment : Fragment() {
             }
         }
 
-        viewModel.currentAnswerString.observe(this, answerStringObserver)
+        viewModel.currentAnswerString.observe(viewLifecycleOwner, answerStringObserver)
 
         return binding.root
     }
 
     private fun onPushNumberButton(view: View, binding: FragmentInterfaceBinding,
-                                   viewModel: MainViewModel) {
+                                   viewModel: MainViewModel
+    ) {
 
         binding.operationText.setTextSize(50F)
         binding.operationText.setTextColor(Color.parseColor("#FFFFFFFF"))
@@ -102,7 +98,8 @@ class InterfaceFragment : Fragment() {
     }
 
     private fun onPushOperatorButton(view: View, binding: FragmentInterfaceBinding,
-                                     viewModel: MainViewModel) {
+                                     viewModel: MainViewModel
+    ) {
 
         binding.operationText.setTextSize(50F)
         binding.operationText.setTextColor(Color.parseColor("#FFFFFFFF"))

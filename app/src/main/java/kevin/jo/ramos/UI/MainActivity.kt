@@ -1,20 +1,15 @@
-package kevin.jo.ramos
+package kevin.jo.ramos.UI
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import kevin.jo.ramos.MainViewModel
+import kevin.jo.ramos.R
 import kevin.jo.ramos.databinding.ActivityMainBinding
 
 private val FRAGMENT_PAGES = arrayOf(NavigationFragment(), HistoryFragment())
@@ -26,6 +21,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val viewModel: MainViewModel by viewModels()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 

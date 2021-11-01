@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/interfaceFragment"
-        android:name="kevin.jo.ramos.InterfaceFragment"
+        android:name="kevin.jo.ramos.UI.InterfaceFragment"
         android:label="InterfaceFragment" >
         <action
             android:id="@+id/action_interfaceFragment_to_expandedInterfaceFragment"
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/expandedInterfaceFragment"
-        android:name="kevin.jo.ramos.ExpandedInterfaceFragment"
+        android:name="kevin.jo.ramos.UI.ExpandedInterfaceFragment"
         android:label="fragment_expanded_interface"
         tools:layout="@layout/fragment_expanded_interface" >
         <action

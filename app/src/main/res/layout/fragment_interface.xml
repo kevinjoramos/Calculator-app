@@ -14,23 +14,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".UI.MainActivity">
 
-        <TextView
-            android:id="@+id/past_operations_text"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recent_expressions"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/obsidian_100"
-            android:gravity="bottom|right"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="@{viewmodel.currentHistoryString.toString()}"
+            android:background="@color/obsidian_100"
             android:textColor="@color/seclusive_white"
             android:textSize="25sp"
             app:layout_constraintBottom_toTopOf="@+id/operation_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/operation_text"
@@ -46,7 +44,7 @@
             app:layout_constraintBottom_toTopOf="@id/answer_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/past_operations_text" />
+            app:layout_constraintTop_toBottomOf="@id/recent_expressions" />
 
         <TextView
             android:id="@+id/answer_text"
@@ -333,6 +331,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".5" />
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

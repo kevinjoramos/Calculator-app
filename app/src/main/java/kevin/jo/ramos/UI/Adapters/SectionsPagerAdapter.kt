@@ -1,4 +1,4 @@
-package kevin.jo.ramos
+package kevin.jo.ramos.UI.Adapters
 
 import android.content.Context
 import androidx.fragment.app.Fragment
