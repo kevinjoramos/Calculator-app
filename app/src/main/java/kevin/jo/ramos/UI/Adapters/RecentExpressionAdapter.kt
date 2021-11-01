@@ -6,24 +6,26 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kevin.jo.ramos.R
+import org.w3c.dom.Text
 
 class RecentExpressionAdapter: RecyclerView.Adapter<RecentExpressionAdapter.RecentViewHolder>() {
+    private lateinit var dataSet: Array<String>
 
     //view holder
     class RecentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewHolder {
-        //return RecentViewHolder(LayoutInflater.from(parent.context).inflate(R.id., parent, false))
-        TODO("Not yet implemented")
+        return RecentViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.text_view_recent, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecentViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val currentItem = dataSet[position]
+        holder.itemView.findViewById<TextView>(R.id.txt_recent).text = currentItem
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return dataSet.size
     }
 
 }

@@ -5,13 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ListAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import kevin.jo.ramos.MainViewModel
 import kevin.jo.ramos.R
+import kevin.jo.ramos.UI.Adapters.RecentExpressionAdapter
 import kevin.jo.ramos.databinding.FragmentInterfaceBinding
 
 class InterfaceFragment : Fragment() {
@@ -68,6 +72,18 @@ class InterfaceFragment : Fragment() {
         }
 
         viewModel.currentAnswerString.observe(viewLifecycleOwner, answerStringObserver)
+
+
+        //Recycler View
+        val adapter = RecentExpressionAdapter()
+        val recyclerView = binding.recentExpressions
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        //Todo  Hook up the adapter to observe the recent history data.
+        //Will need to rework the model and view model.
+
+
 
         return binding.root
     }
