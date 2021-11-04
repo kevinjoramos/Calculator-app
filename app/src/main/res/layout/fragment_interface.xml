@@ -24,6 +24,8 @@
             android:paddingRight="15dp"
             android:background="@color/obsidian_100"
             android:textColor="@color/seclusive_white"
+            app:stackFromEnd="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/operation_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

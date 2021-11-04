@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 
 object CalculatorLogic {
     //Value used to know if operation is over, and if a new one can start.
-    private val _isReadyForReset = MutableLiveData<Boolean>()
-    val isReadyForReset: LiveData<Boolean>
-            get() = isReadyForReset
+    private var _isReadyForReset = false
 
     //The expression being typed into the calculator by user.
     private val expression = MutableLiveData<String>()
@@ -21,22 +19,23 @@ object CalculatorLogic {
         get() = answerString
 
     //List of past expressions with their answers.
-    private val historyString = MutableLiveData<String>()
-    val currentHistoryString: LiveData<String>
+    private val historyString = MutableLiveData<MutableList<String>>()
+    val currentHistoryString: LiveData<MutableList<String>>
         get() = historyString
 
     private const val operatorString: String = "+-×÷"
 
     init {
-        expression.value = "0"
+        expression.value = ""
         answerString.value = ""
-        historyString.value = ""
-        _isReadyForReset.value = false
+        historyString.value = mutableListOf()
     }
 
     //Number Buttons:
     fun onPushNumberButton(char: String) {
-        resetDisplay()
+        //If number button is pushed after having recently pushing equals.
+        if (_isReadyForReset == true) onButtonAfterEquals(true)
+
         expression.value = expression.value.plus(char)
         updateAnswerString()
 
@@ -44,11 +43,10 @@ object CalculatorLogic {
 
     //Utility Buttons:
     fun onPushButtonClear() {
-        if (_isReadyForReset.value == true) {
-            updateHistoryString()
-            _isReadyForReset.value = false
-        };
-        if (expression.value == "") historyString.value = ""
+        //if the strings are empty, empty the recent history.
+        if (expression.value == "") historyString.value = mutableListOf()
+
+        //clear interface
         expression.value = ""
         answerString.value = ""
     }
@@ -71,12 +69,8 @@ object CalculatorLogic {
 
     //Operator Buttons:
     fun onPushButtonOperator(char: String) {
-        if (_isReadyForReset.value == true) {
-            updateHistoryString()
-            _isReadyForReset.value = false
-        }
 
-        //case where no operands were input
+        //case where no operands where input
         if (expression.value.equals("")) { return }
 
         //case preventing two operators in a row.
@@ -84,6 +78,9 @@ object CalculatorLogic {
 
         //case where the current operand only has a point.
         if (separateTerms().last() == ".") { return }
+
+        //If number button is pushed after having recently pushing equals.
+        if (_isReadyForReset == true) onButtonAfterEquals(false)
 
         expression.value = expression.value.plus(char)
 
@@ -107,8 +104,31 @@ object CalculatorLogic {
 
     //Equals Function
     fun onPushButtonEquals() {
+        if (expression.value == "") return
         updateAnswerString()
-        _isReadyForReset.value = true
+        updateHistoryString()
+        _isReadyForReset = true
+
+    }
+
+    private fun onButtonAfterEquals(isNumberButton: Boolean) {
+        _isReadyForReset = false
+
+        if (isNumberButton) {
+            onPushButtonClear()
+            return
+        }
+
+        val answer = answerString.value?.replace(" ", "")?.
+                                        replace("=", "")
+        onPushButtonClear()
+        expression.value = answer
+
+        //on next button push
+        //if the button is a number, clear the fields and type new operator
+        //if the button is an operator, clear the operator field and put the answer there
+        // with the new operator
+
     }
 
     private fun separateTerms(): List<String> {
@@ -281,8 +301,6 @@ object CalculatorLogic {
         val computation: Float = computePostFix(postFixExpression)
 
         answerString.value = "= ".plus(computation.toString())
-        Log.i("CalculatorLogic", "Update Answer String ${answerString.value}")
-
     }
 
     //History Text View
@@ -290,14 +308,7 @@ object CalculatorLogic {
         val operation = expression.value
         val answer = answerString.value
 
-        historyString.value += operation + answer + "\n\n"
-
+        historyString.value?.add(operation + answer)
     }
 
-    private fun resetDisplay() {
-        if ( _isReadyForReset.value == false ) { return }
-        updateHistoryString()
-        onPushButtonClear()
-        _isReadyForReset.value = false
-    }
 }

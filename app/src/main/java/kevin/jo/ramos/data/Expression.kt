@@ -7,9 +7,8 @@ import java.util.*
 
 @Entity
 data class Expression(
-    @PrimaryKey val id: Int,
-    @ColumnInfo val name: String,
-    @ColumnInfo val date: Date,
-    @ColumnInfo val expressionString: String,
-    @ColumnInfo val answerString: String
+    @PrimaryKey(autoGenerate = true)
+    var id: Int,
+    val expressionString: String,
+    val answerString: String
 )

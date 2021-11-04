@@ -23,7 +23,6 @@
             android:gravity="bottom|right"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="@{viewmodel.currentHistoryString.toString()}"
             android:textColor="@color/seclusive_white"
             android:textSize="25sp"
             app:layout_constraintBottom_toTopOf="@+id/operation_text"

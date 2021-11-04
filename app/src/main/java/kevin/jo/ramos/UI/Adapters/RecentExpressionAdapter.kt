@@ -9,7 +9,7 @@ import kevin.jo.ramos.R
 import org.w3c.dom.Text
 
 class RecentExpressionAdapter: RecyclerView.Adapter<RecentExpressionAdapter.RecentViewHolder>() {
-    private lateinit var dataSet: Array<String>
+    private lateinit var dataSet: MutableList<String>
 
     //view holder
     class RecentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -26,6 +26,11 @@ class RecentExpressionAdapter: RecyclerView.Adapter<RecentExpressionAdapter.Rece
 
     override fun getItemCount(): Int {
         return dataSet.size
+    }
+
+    fun setData(expressions: MutableList<String>) {
+        this.dataSet = expressions
+        notifyDataSetChanged()
     }
 
 }

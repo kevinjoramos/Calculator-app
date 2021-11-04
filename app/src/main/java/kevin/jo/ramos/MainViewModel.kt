@@ -1,16 +1,36 @@
 package kevin.jo.ramos
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kevin.jo.ramos.Model.CalculatorLogic
 import kevin.jo.ramos.Model.HistoryRepository
+import kevin.jo.ramos.data.AppDatabase
+import kevin.jo.ramos.data.Expression
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
-    val historyRepository = HistoryRepository()
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    val expressionData: LiveData<List<Expression>>
+    private val historyRepository: HistoryRepository
+
+    init {
+        val expressionDao = AppDatabase.getDatabase(application).expressionDao()
+        historyRepository = HistoryRepository(expressionDao)
+        expressionData = historyRepository.readAllData
+    }
 
     val currentExpression: LiveData<String> = CalculatorLogic.currentExpression
-    val currentHistoryString: LiveData<String> = CalculatorLogic.currentHistoryString
+    val currentHistoryString: LiveData<MutableList<String>> = CalculatorLogic.currentHistoryString
     val currentAnswerString: LiveData<String> = CalculatorLogic.currentAnswerString
+
+    fun addExpressionToDatabase(expression: Expression) {
+        viewModelScope.launch(Dispatchers.IO) {
+            historyRepository.addExpression((expression))
+        }
+    }
 
     //Number Buttons:
     fun onPushNumberButton(char: String) {

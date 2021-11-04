@@ -20,7 +20,7 @@ import kevin.jo.ramos.databinding.FragmentInterfaceBinding
 
 class InterfaceFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,12 +78,10 @@ class InterfaceFragment : Fragment() {
         val adapter = RecentExpressionAdapter()
         val recyclerView = binding.recentExpressions
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        //Todo  Hook up the adapter to observe the recent history data.
-        //Will need to rework the model and view model.
-
-
+        viewModel.currentHistoryString.observe(viewLifecycleOwner, Observer { recents ->
+            adapter.setData(recents)
+        })
 
         return binding.root
     }
