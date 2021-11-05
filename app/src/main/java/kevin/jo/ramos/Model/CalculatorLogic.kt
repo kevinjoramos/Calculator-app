@@ -19,16 +19,16 @@ object CalculatorLogic {
         get() = answerString
 
     //List of past expressions with their answers.
-    private val historyString = MutableLiveData<MutableList<String>>()
-    val currentHistoryString: LiveData<MutableList<String>>
-        get() = historyString
+    private val recentHistoryList = MutableLiveData<MutableList<String>>()
+    val currentHistoryList: LiveData<MutableList<String>>
+        get() = recentHistoryList
 
     private const val operatorString: String = "+-×÷"
 
     init {
         expression.value = ""
         answerString.value = ""
-        historyString.value = mutableListOf()
+        recentHistoryList.value = mutableListOf()
     }
 
     //Number Buttons:
@@ -44,7 +44,7 @@ object CalculatorLogic {
     //Utility Buttons:
     fun onPushButtonClear() {
         //if the strings are empty, empty the recent history.
-        if (expression.value == "") historyString.value = mutableListOf()
+        if (expression.value == "") recentHistoryList.value = mutableListOf()
 
         //clear interface
         expression.value = ""
@@ -295,12 +295,12 @@ object CalculatorLogic {
     fun updateAnswerString(){
 
         val separatedTerms: List<String> = separateTerms()
-        if (separatedTerms.size == 1) { answerString.value = "= " + separatedTerms[0]; return }
+        if (separatedTerms.size == 1) { answerString.value = separatedTerms[0]; return }
 
         val postFixExpression: List<String> = infixToPostfix(separatedTerms)
         val computation: Float = computePostFix(postFixExpression)
 
-        answerString.value = "= ".plus(computation.toString())
+        answerString.value = computation.toString()
     }
 
     //History Text View
@@ -308,11 +308,11 @@ object CalculatorLogic {
         val operation = expression.value
         val answer = answerString.value
 
-        historyString.value?.add(operation + answer)
+        recentHistoryList.value?.add("$operation = $answer")
     }
 
     fun removeHistoryString(position: Int) {
-        historyString.value?.removeAt(position)
+        recentHistoryList.value?.removeAt(position)
 
     }
 

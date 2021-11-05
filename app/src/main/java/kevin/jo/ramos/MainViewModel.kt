@@ -3,7 +3,6 @@ package kevin.jo.ramos
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kevin.jo.ramos.Model.CalculatorLogic
 import kevin.jo.ramos.Model.HistoryRepository
@@ -23,12 +22,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     val currentExpression: LiveData<String> = CalculatorLogic.currentExpression
-    val currentHistoryString: LiveData<MutableList<String>> = CalculatorLogic.currentHistoryString
+    val currentHistoryList: LiveData<MutableList<String>> = CalculatorLogic.currentHistoryList
     val currentAnswerString: LiveData<String> = CalculatorLogic.currentAnswerString
 
     fun addExpressionToDatabase(expression: Expression) {
         viewModelScope.launch(Dispatchers.IO) {
-            historyRepository.addExpression((expression))
+            historyRepository.addExpression(expression)
+        }
+    }
+
+    fun removeExpressionFromDatabase(expression: Expression) {
+        viewModelScope.launch(Dispatchers.IO) {
+            historyRepository.deleteExpression(expression)
         }
     }
 

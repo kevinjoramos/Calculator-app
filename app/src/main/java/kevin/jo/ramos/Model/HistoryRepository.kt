@@ -14,4 +14,8 @@ class HistoryRepository(private val expressionDAO: ExpressionDAO) {
     suspend fun addExpression(expression: Expression) {
         expressionDAO.insert(expression)
     }
+
+    suspend fun deleteExpression(expression: Expression) {
+        expressionDAO.delete(expression)
+    }
 }

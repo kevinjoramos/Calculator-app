@@ -5,25 +5,25 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.ListAdapter
+import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kevin.jo.ramos.MainViewModel
 import kevin.jo.ramos.R
-import kevin.jo.ramos.UI.Adapters.HistoryAdapter
 import kevin.jo.ramos.UI.Adapters.RecentExpressionAdapter
+import kevin.jo.ramos.data.Expression
 import kevin.jo.ramos.databinding.FragmentInterfaceBinding
 
 class InterfaceFragment : Fragment() {
 
     val viewModel: MainViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +39,7 @@ class InterfaceFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewmodel = viewModel
 
-        //ONCLICK LISTENERS
+        //BUTTON ONCLICK LISTENERS
         binding.button0.setOnClickListener { onPushNumberButton(it, binding, viewModel) }
         binding.button1.setOnClickListener { onPushNumberButton(it, binding, viewModel) }
         binding.button2.setOnClickListener { onPushNumberButton(it, binding, viewModel) }
@@ -60,21 +60,21 @@ class InterfaceFragment : Fragment() {
         binding.buttonPercent.setOnClickListener { viewModel.onPushButtonPercent() }
         binding.buttonEqual.setOnClickListener { onPushEquals(binding, viewModel)}
 
-        //open advanced calulator
+
+        //NAVIGATE TO SCIENTIFIC CALCULATOR
         binding.buttonBlank.setOnClickListener { openScientificCalculator(navController) }
 
-
-        //Answer string observer.
-        val answerStringObserver = Observer<String> { answer ->
-
+        //ANSWER STRING OBSERVER - Updates the answer text view, and formatting.
+        viewModel.currentAnswerString.observe(viewLifecycleOwner, Observer { answer ->
             if (answer.isNotEmpty()) {
                 binding.answerText.visibility = View.VISIBLE
+                val answerString = "= $answer"
+                binding.answerText.text = answerString
             } else {
                 binding.answerText.visibility = View.GONE
+                binding.answerText.text = ""
             }
-        }
-
-        viewModel.currentAnswerString.observe(viewLifecycleOwner, answerStringObserver)
+        })
 
 
         //Recycler View
@@ -82,10 +82,11 @@ class InterfaceFragment : Fragment() {
         val recyclerView = binding.recentExpressions
         recyclerView.adapter = adapter
 
-        viewModel.currentHistoryString.observe(viewLifecycleOwner, Observer { recents ->
+        viewModel.currentHistoryList.observe(viewLifecycleOwner, Observer { recents ->
             adapter.setData(recents)
         })
 
+        // SWIPE GESTURE FOR RECYCLER VIEW HOLDER - write to database
         val itemTouchHelperCallback =
             object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
                 override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
@@ -94,8 +95,20 @@ class InterfaceFragment : Fragment() {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val text = viewHolder.itemView
+                        .findViewById<TextView>(R.id.txt_recent).text
+
+                    val operationString = text.split(" ")[0]
+                    val computationString = text.split(" ")[2]
+
+                    val expression = Expression(0,operationString, computationString)
+
                     viewModel.removeHistoryString(viewHolder.adapterPosition)
                     adapter.notifyItemRemoved(viewHolder.adapterPosition)
+
+                    viewModel.addExpressionToDatabase(expression)
+
+                    Toast.makeText(requireContext(), "Operation Saved", Toast.LENGTH_LONG).show()
                 }
 
             }

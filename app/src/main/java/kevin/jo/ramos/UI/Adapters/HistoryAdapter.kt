@@ -29,7 +29,7 @@ class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
         val currentItem = historyData[position]
         val expressionString = currentItem.expressionString
         val answerString = currentItem.answerString
-        val fullOperation = expressionString + answerString
+        val fullOperation = "$expressionString = $answerString"
         holder.itemView.findViewById<TextView>(R.id.txt_recent).text = fullOperation
 
     }
