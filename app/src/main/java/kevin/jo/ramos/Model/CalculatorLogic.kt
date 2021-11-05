@@ -311,4 +311,9 @@ object CalculatorLogic {
         historyString.value?.add(operation + answer)
     }
 
+    fun removeHistoryString(position: Int) {
+        historyString.value?.removeAt(position)
+
+    }
+
 }

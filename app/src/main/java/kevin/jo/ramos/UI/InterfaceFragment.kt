@@ -12,9 +12,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kevin.jo.ramos.MainViewModel
 import kevin.jo.ramos.R
+import kevin.jo.ramos.UI.Adapters.HistoryAdapter
 import kevin.jo.ramos.UI.Adapters.RecentExpressionAdapter
 import kevin.jo.ramos.databinding.FragmentInterfaceBinding
 
@@ -82,6 +85,23 @@ class InterfaceFragment : Fragment() {
         viewModel.currentHistoryString.observe(viewLifecycleOwner, Observer { recents ->
             adapter.setData(recents)
         })
+
+        val itemTouchHelperCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                                    target: RecyclerView.ViewHolder): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    viewModel.removeHistoryString(viewHolder.adapterPosition)
+                    adapter.notifyItemRemoved(viewHolder.adapterPosition)
+                }
+
+            }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         return binding.root
     }

@@ -63,6 +63,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         CalculatorLogic.onPushButtonEquals()
     }
 
+    fun removeHistoryString(position: Int) {
+        CalculatorLogic.removeHistoryString(position)
+
+    }
+
 
 
 
