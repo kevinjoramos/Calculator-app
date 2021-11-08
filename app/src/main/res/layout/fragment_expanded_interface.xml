@@ -15,20 +15,20 @@
         android:layout_height="match_parent"
         tools:context=".UI.MainActivity">
 
-        <TextView
-            android:id="@+id/past_operations_text"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recent_expressions"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/obsidian_100"
-            android:gravity="bottom|right"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:textColor="@color/seclusive_white"
-            android:textSize="25sp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/operation_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:stackFromEnd="true" />
 
         <TextView
             android:id="@+id/operation_text"
@@ -37,6 +37,7 @@
             android:background="@color/obsidian_100"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
+            android:layout_marginTop="16dp"
             android:text="@{viewmodel.currentExpression.toString()}"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
@@ -44,7 +45,7 @@
             app:layout_constraintBottom_toTopOf="@id/answer_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/past_operations_text" />
+            app:layout_constraintTop_toBottomOf="@id/recent_expressions" />
 
         <TextView
             android:id="@+id/answer_text"
@@ -281,7 +282,7 @@
             app:layout_constraintEnd_toStartOf="@+id/button_deg_rad"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/operation_text" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline2" />
 
         <Button
             android:id="@+id/button_exponent"
@@ -472,7 +473,7 @@
             app:layout_constraintEnd_toStartOf="@+id/button_sin"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_2nd"
-            app:layout_constraintTop_toBottomOf="@+id/operation_text" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline2" />
 
         <Button
             android:id="@+id/button_sin"
@@ -484,7 +485,7 @@
             app:layout_constraintEnd_toStartOf="@+id/button_cos"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_deg_rad"
-            app:layout_constraintTop_toBottomOf="@+id/operation_text" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline2" />
 
         <Button
             android:id="@+id/button_cos"
@@ -496,20 +497,19 @@
             app:layout_constraintEnd_toStartOf="@+id/button_tan"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_sin"
-            app:layout_constraintTop_toBottomOf="@+id/operation_text" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline2" />
 
         <Button
             android:id="@+id/button_tan"
             style="@style/scientific_button"
-            android:layout_marginEnd="1dp"
-            android:text="tan"
             android:background="@color/Grey_300"
+            android:text="tan"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_right_parenthesis"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/button_cos"
-            app:layout_constraintTop_toBottomOf="@+id/operation_text" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline2" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
