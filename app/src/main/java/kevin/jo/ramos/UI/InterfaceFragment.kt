@@ -5,18 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import kevin.jo.ramos.MainViewModel
 import kevin.jo.ramos.R
-import kevin.jo.ramos.UI.Adapters.RecentExpressionAdapter
+import kevin.jo.ramos.UI.Adapters.RecentsAdapter
 import kevin.jo.ramos.data.Expression
 import kevin.jo.ramos.databinding.FragmentInterfaceBinding
 
@@ -78,43 +76,15 @@ class InterfaceFragment : Fragment() {
 
 
         //Recycler View
-        val adapter = RecentExpressionAdapter()
+        val adapter = RecentsAdapter(::onBookmarkOperation)
         val recyclerView = binding.recentExpressions
         recyclerView.adapter = adapter
 
+
         viewModel.currentHistoryList.observe(viewLifecycleOwner, Observer { recents ->
             adapter.setData(recents)
+            recyclerView.scrollToPosition(adapter.itemCount - 1) //TODO-> this workds when I apply changes but not when running.
         })
-
-        // SWIPE GESTURE FOR RECYCLER VIEW HOLDER - write to database
-        val itemTouchHelperCallback =
-            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                    target: RecyclerView.ViewHolder): Boolean {
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val text = viewHolder.itemView
-                        .findViewById<TextView>(R.id.txt_recent).text
-
-                    val operationString = text.split(" ")[0]
-                    val computationString = text.split(" ")[2]
-
-                    val expression = Expression(0,operationString, computationString)
-
-                    viewModel.removeHistoryString(viewHolder.adapterPosition)
-                    adapter.notifyItemRemoved(viewHolder.adapterPosition)
-
-                    viewModel.addExpressionToDatabase(expression)
-
-                    Toast.makeText(requireContext(), "Operation Saved", Toast.LENGTH_LONG).show()
-                }
-
-            }
-
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         return binding.root
     }
@@ -191,6 +161,9 @@ class InterfaceFragment : Fragment() {
         navController.navigate(R.id.action_interfaceFragment_to_expandedInterfaceFragment)
     }
 
-
-
+    fun onBookmarkOperation(expression: Expression, adapterPosition: Int) {
+        viewModel.removeHistoryString(adapterPosition)
+        viewModel.addExpressionToDatabase(expression)
+        Toast.makeText(requireContext(), "Operation Saved", Toast.LENGTH_LONG).show()
+    }
 }

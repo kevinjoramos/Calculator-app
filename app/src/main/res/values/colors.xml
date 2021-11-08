@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="obsidian_100">#1a1a1a</color>
-    <color name="obsidian_200">#333</color>
-    <color name="Grey_100">#272727</color>
-    <color name="Grey_200">#202020</color>
+    <color name="obsidian_100">#FF1a1a1a</color>
+    <color name="obsidian_200">#FF303030</color>
+    <color name="Grey_100">#FF272727</color>
+    <color name="Grey_200">#FF202020</color>
+    <color name="Grey_300">#AA202020</color>
     <color name="purple_200">#FF3700BF</color>
     <color name="purple_100">#FF483699</color>
     <color name="black">#FF000000</color>

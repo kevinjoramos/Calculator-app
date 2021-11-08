@@ -34,7 +34,7 @@ class HistoryFragment : Fragment() {
         binding.viewmodel = viewModel
 
         //Recycler View
-        val adapter = HistoryAdapter()
+        val adapter = HistoryAdapter(::onDeleteBookmark)
         val recyclerView = binding.historyRecycler
         recyclerView.adapter = adapter
 
@@ -42,34 +42,11 @@ class HistoryFragment : Fragment() {
             adapter.setHistoryData(recents.toMutableList())
         })
 
-        // SWIPE GESTURE FOR DELETING DATABASE ENTRIES
-        val itemTouchHelperCallback =
-            object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder): Boolean {
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val text = viewHolder.itemView
-                        .findViewById<TextView>(R.id.txt_recent).text
-
-                    val operationString = text.split(" ")[0]
-                    val computationString = text.split(" ")[2]
-
-                    val expression = Expression(0,operationString, computationString)
-
-                    viewModel.removeExpressionFromDatabase(expression)
-                    adapter.notifyItemRemoved(viewHolder.adapterPosition)
-                }
-
-            }
-
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-
-
         return binding.root
+    }
+
+    fun onDeleteBookmark(operationString: String) {
+        viewModel.removeExpressionFromDatabase(operationString)
     }
 
 

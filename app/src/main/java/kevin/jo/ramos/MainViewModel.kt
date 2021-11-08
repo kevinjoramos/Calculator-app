@@ -31,9 +31,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun removeExpressionFromDatabase(expression: Expression) {
+    fun removeExpressionFromDatabase(operationString: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            historyRepository.deleteExpression(expression)
+            historyRepository.deleteExpression(operationString)
         }
     }
 

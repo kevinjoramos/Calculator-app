@@ -5,6 +5,7 @@
     android:background="@color/obsidian_100">
 
     <data>
+
         <variable
             name="viewmodel"
             type="kevin.jo.ramos.MainViewModel" />
@@ -19,21 +20,23 @@
             android:id="@+id/recent_expressions"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/obsidian_100"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:background="@color/obsidian_100"
             android:textColor="@color/seclusive_white"
-            app:stackFromEnd="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/operation_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:stackFromEnd="true"
+           />
 
         <TextView
             android:id="@+id/operation_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:background="@color/obsidian_100"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
@@ -330,8 +333,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".5" />
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

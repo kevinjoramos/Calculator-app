@@ -1,20 +1,17 @@
 package kevin.jo.ramos.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface ExpressionDAO {
     @Query("SELECT * FROM Expression")
     fun readAllData(): LiveData<List<Expression>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(expression: Expression)
 
-    @Delete
-    suspend fun delete(expression: Expression)
+    @Query("DELETE FROM Expression WHERE expressionString = :expressionString")
+    suspend fun delete(expressionString: String)
 
 }

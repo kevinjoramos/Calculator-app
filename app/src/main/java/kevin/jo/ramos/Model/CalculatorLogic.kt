@@ -44,6 +44,7 @@ object CalculatorLogic {
     //Utility Buttons:
     fun onPushButtonClear() {
         //if the strings are empty, empty the recent history.
+        _isReadyForReset = false
         if (expression.value == "") recentHistoryList.value = mutableListOf()
 
         //clear interface
@@ -307,6 +308,7 @@ object CalculatorLogic {
     private fun updateHistoryString() {
         val operation = expression.value
         val answer = answerString.value
+        val mList = recentHistoryList.value?.reverse()
 
         recentHistoryList.value?.add("$operation = $answer")
     }
