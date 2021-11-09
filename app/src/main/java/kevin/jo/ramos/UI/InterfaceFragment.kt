@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import kevin.jo.ramos.MainViewModel
 import kevin.jo.ramos.R
 import kevin.jo.ramos.UI.Adapters.RecentsAdapter
@@ -50,12 +49,12 @@ class InterfaceFragment : Fragment() {
         binding.button9.setOnClickListener { onPushNumberButton(it, binding, viewModel) }
         binding.buttonClear.setOnClickListener { onPushClear(binding, viewModel) }
         binding.buttonDelete.setOnClickListener { onPushDelete(binding, viewModel) }
-        binding.buttonPoint.setOnClickListener { viewModel.onPushButtonPeriod() }
+        binding.buttonPoint.setOnClickListener { viewModel.insertPoint(".") }
         binding.buttonAdd.setOnClickListener { onPushOperatorButton(it, binding, viewModel) }
         binding.buttonSubtract.setOnClickListener { onPushOperatorButton(it, binding, viewModel) }
         binding.buttonDivision.setOnClickListener { onPushOperatorButton(it, binding, viewModel) }
         binding.buttonMultiply.setOnClickListener { onPushOperatorButton(it, binding, viewModel) }
-        binding.buttonPercent.setOnClickListener { viewModel.onPushButtonPercent() }
+        binding.buttonPercent.setOnClickListener { viewModel.requestPercent() }
         binding.buttonEqual.setOnClickListener { onPushEquals(binding, viewModel)}
 
 
@@ -101,16 +100,16 @@ class InterfaceFragment : Fragment() {
 
         when (view) {
 
-            binding.button0 -> viewModel.onPushNumberButton("0")
-            binding.button1 -> viewModel.onPushNumberButton("1")
-            binding.button2 -> viewModel.onPushNumberButton("2")
-            binding.button3 -> viewModel.onPushNumberButton("3")
-            binding.button4 -> viewModel.onPushNumberButton("4")
-            binding.button5 -> viewModel.onPushNumberButton("5")
-            binding.button6 -> viewModel.onPushNumberButton("6")
-            binding.button7 -> viewModel.onPushNumberButton("7")
-            binding.button8 -> viewModel.onPushNumberButton("8")
-            binding.button9 -> viewModel.onPushNumberButton("9")
+            binding.button0 -> viewModel.insertNumber("0")
+            binding.button1 -> viewModel.insertNumber("1")
+            binding.button2 -> viewModel.insertNumber("2")
+            binding.button3 -> viewModel.insertNumber("3")
+            binding.button4 -> viewModel.insertNumber("4")
+            binding.button5 -> viewModel.insertNumber("5")
+            binding.button6 -> viewModel.insertNumber("6")
+            binding.button7 -> viewModel.insertNumber("7")
+            binding.button8 -> viewModel.insertNumber("8")
+            binding.button9 -> viewModel.insertNumber("9")
         }
     }
 
@@ -125,22 +124,22 @@ class InterfaceFragment : Fragment() {
         binding.answerText.setTextColor(Color.parseColor("#66FFFFFF"))
 
         when (view) {
-            binding.buttonAdd -> viewModel.onPushButtonOperator("+")
-            binding.buttonSubtract -> viewModel.onPushButtonOperator("-")
-            binding.buttonDivision -> viewModel.onPushButtonOperator("÷")
-            binding.buttonMultiply -> viewModel.onPushButtonOperator("×")
+            binding.buttonAdd -> viewModel.insertInfixOperator("+")
+            binding.buttonSubtract -> viewModel.insertInfixOperator("-")
+            binding.buttonDivision -> viewModel.insertInfixOperator("÷")
+            binding.buttonMultiply -> viewModel.insertInfixOperator("×")
         }
     }
 
     private fun onPushClear(binding: FragmentInterfaceBinding, viewModel: MainViewModel) {
-        viewModel.onPushButtonClear()
+        viewModel.requestClear()
         binding.operationText.setTextSize(50F)
         binding.answerText.setTextSize(32F)
 
     }
 
     private fun onPushEquals(binding: FragmentInterfaceBinding, viewModel: MainViewModel) {
-        viewModel.onPushButtonEquals()
+        viewModel.requestEquals()
         binding.operationText.setTextSize(32F)
         binding.operationText.setTextColor(Color.parseColor("#66FFFFFF"))
 
@@ -149,7 +148,7 @@ class InterfaceFragment : Fragment() {
     }
 
     private fun onPushDelete(binding: FragmentInterfaceBinding, viewModel: MainViewModel) {
-        viewModel.onPushButtonDelete()
+        viewModel.requestDelete()
         binding.operationText.setTextSize(50F)
         binding.operationText.setTextColor(Color.parseColor("#FFFFFFFF"))
 

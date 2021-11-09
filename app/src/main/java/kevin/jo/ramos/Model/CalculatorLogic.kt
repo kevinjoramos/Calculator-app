@@ -1,164 +1,224 @@
 package kevin.jo.ramos.Model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 object CalculatorLogic {
     //Value used to know if operation is over, and if a new one can start.
-    private var _isReadyForReset = false
+    private var isReadyForReset = false
 
     //The expression being typed into the calculator by user.
-    private val expression = MutableLiveData<String>()
-    val currentExpression: LiveData<String>
-            get() = expression
+    private val operationString = MutableLiveData<String>()
+    val readOperationString: LiveData<String>
+            get() = operationString
 
     //The expression containing the answer to the expression.
-    private val answerString = MutableLiveData<String>()
-    val currentAnswerString: LiveData<String>
-        get() = answerString
+    private val computationString = MutableLiveData<String>()
+    val readComputationString: LiveData<String>
+        get() = computationString
 
     //List of past expressions with their answers.
-    private val recentHistoryList = MutableLiveData<MutableList<String>>()
-    val currentHistoryList: LiveData<MutableList<String>>
-        get() = recentHistoryList
+    private val recentExpressionsList = MutableLiveData<MutableList<String>>()
+    val readRecentExpressionsList: LiveData<MutableList<String>>
+        get() = recentExpressionsList
 
-    private const val operatorString: String = "+-×÷"
+    private const val infixOperatorString: String = "+-×÷"
 
     init {
-        expression.value = ""
-        answerString.value = ""
-        recentHistoryList.value = mutableListOf()
+        operationString.value = ""
+        computationString.value = ""
+        recentExpressionsList.value = mutableListOf()
+    }
+
+    private fun getValue(): String? {
+        return operationString.value
     }
 
     //Number Buttons:
-    fun onPushNumberButton(char: String) {
-        //If number button is pushed after having recently pushing equals.
-        if (_isReadyForReset == true) onButtonAfterEquals(true)
+    fun insertNumber(number: String) {
+        val operationValue: String = getValue() ?: return
 
-        expression.value = expression.value.plus(char)
+        // start a new operation if the previous button that was pushed was equals.
+        if (isReadyForReset) onButtonAfterEquals(true)
+
+        // enforce a 15 digit limit
+        if (separateTerms().last().length > 14) return
+
+        operationString.value = operationValue.plus(number)
         updateAnswerString()
+    }
+
+    fun insertSpecialNumber(number: String) {
+        val operationValue: String = getValue() ?: return
+
+        // start a new operation if the previous button that was pushed was equals.
+        if (isReadyForReset) onButtonAfterEquals(true)
+
+        // enforce special numbers to only be between operators.
+        if (!infixOperatorString.contains(operationValue.last())) return
+
+        operationString.value = operationValue.plus(number)
+    }
+
+    fun insertInfixOperator(char: String) {
+        val operationValue: String = getValue() ?: return
+
+        // guard operator first (cannot start with operator)
+        if (operationValue == "") return
+
+        // guard no operators in a row.
+        if (infixOperatorString.contains(operationValue.last())) return
+
+        // guard solo decimal
+        if (separateTerms().last() == ".") return
+
+        // if operator is inserted after pushing equals, we continue with the previous
+        // expression.
+        if (isReadyForReset) onButtonAfterEquals(false)
+
+        operationString.value = operationString.value.plus(char)
 
     }
 
-    //Utility Buttons:
-    fun onPushButtonClear() {
-        //if the strings are empty, empty the recent history.
-        _isReadyForReset = false
-        if (expression.value == "") recentHistoryList.value = mutableListOf()
+    fun insertPrefixOperator(operator: String) {
 
-        //clear interface
-        expression.value = ""
-        answerString.value = ""
-    }
-
-    fun onPushButtonDelete() {
-        if (expression.value.equals("")) { return }
-
-        expression.value = expression.value?.dropLast(1)
-    }
-
-
-    fun onPushButtonPeriod() {
-        val separatedTerms: List<String> = separateTerms()
-
-        //we check the last number if it already has a period before writing one.
-        if (separatedTerms.last().contains(".") == false) {
-            expression.value = expression.value.plus(".")
-        }
-    }
-
-    //Operator Buttons:
-    fun onPushButtonOperator(char: String) {
-
-        //case where no operands where input
-        if (expression.value.equals("")) { return }
-
-        //case preventing two operators in a row.
-        if (operatorString.contains(expression.value?.last().toString())) { return }
-
-        //case where the current operand only has a point.
-        if (separateTerms().last() == ".") { return }
-
-        //If number button is pushed after having recently pushing equals.
-        if (_isReadyForReset == true) onButtonAfterEquals(false)
-
-        expression.value = expression.value.plus(char)
 
     }
 
-    fun onPushButtonPercent() {
-        //Case where no number has been input yet.
+    fun performPercent() {
+        val operationValue: String = getValue() ?: return
 
-        if (expression.value == "") return
+        // guard no operands
+        if (operationValue == "") return
 
-        if (operatorString.contains(expression.value?.last().toString())) return
-            //Nothing happens when the most recent character typed in was
-            //an operator
+        // guard performing percent on operator instead of operand.
+        if (infixOperatorString.contains(operationValue.last())) return
 
         val terms = separateTerms()
         val percentage: Float = terms.last().toFloat().div(100)
         val offset = terms.last().length
 
-        expression.value = expression.value?.dropLast(offset).plus(percentage.toString() )
+        val value = operationValue.dropLast(offset).plus(percentage.toString())
+
+        operationString.value = value
+    }
+
+
+
+    //Utility Buttons:
+    fun clear() {
+        //if the strings are empty, empty the recent history.
+        isReadyForReset = false
+        if (operationString.value == "") recentExpressionsList.value = mutableListOf()
+
+        //clear interface
+        operationString.value = ""
+        computationString.value = ""
+    }
+
+    fun delete() {
+        val operationValue: String = getValue() ?: return
+
+        // guard deleting from empty string.
+        if (operationValue == "") return
+
+        operationString.value = operationValue.dropLast(1)
+    }
+
+    fun insertPeriod() {
+        val operationValue: String = getValue() ?: return
+        val separatedTerms: List<String> = separateTerms()
+
+        //guard more than 1 decimal point in a operand.
+        if (separatedTerms.last().contains(".")) return
+
+        operationString.value = operationString.value.plus(".")
+
+    }
+
+    fun open2ndMenu() {
+
+    }
+
+    fun changeUnits() {
+
+    }
+
+    fun insertParenthesis(parenthesis: String) {
+        val operationValue: String = getValue() ?: return
+
+        if (parenthesis == "(") {
+            operationString.value = operationValue.plus("(")
+            return
+        }
+
+        //guard placing ")" with no "(" before.
+        var open = 0
+        for (character in operationValue) {
+            if (character == '(') { open += 1; continue }
+            if (character == ')') { open -= 1; continue }
+        }
+
+        if (open < 1) return
+        operationString.value = operationValue.plus(")")
     }
 
     //Equals Function
-    fun onPushButtonEquals() {
-        if (expression.value == "") return
+    fun performEquals() {
+        // guard performing equals on empty string.
+        if (operationString.value == "") return
+
         updateAnswerString()
         updateHistoryString()
-        _isReadyForReset = true
+        isReadyForReset = true
 
     }
 
     private fun onButtonAfterEquals(isNumberButton: Boolean) {
-        _isReadyForReset = false
+        val computationValue: String = computationString.value ?: return
+        isReadyForReset = false
 
-        if (isNumberButton) {
-            onPushButtonClear()
-            return
-        }
+        // when user enters a number after pushing equals, immediately start
+        // new operation.
+        if (isNumberButton) { clear(); return }
 
-        val answer = answerString.value?.replace(" ", "")?.
-                                        replace("=", "")
-        onPushButtonClear()
-        expression.value = answer
-
-        //on next button push
-        //if the button is a number, clear the fields and type new operator
-        //if the button is an operator, clear the operator field and put the answer there
-        // with the new operator
-
+        // when user enters operator after pushing equals, collapse the expression
+        // and continue.
+        val answer = computationValue
+        clear()
+        operationString.value = answer
     }
 
-    private fun separateTerms(): List<String> {
-        val numbersString: String = "1234567890."
-        val termsList: MutableList<String> = mutableListOf("")
+    private fun separateTerms(operation: String = "start",
+                              terms: List<String> = listOf("")): List<String> {
 
-        if (expression.value != null) {
-            val value = expression.value
-
-            //Main Code: Convert the string into a list of strings
-            //separating operators and operands.
-
-            if (value != null) {
-
-                var j: Int = 0
-                for (i in 0 until value.length) {
-
-
-                    if (numbersString.contains(value[i]) ) {
-                        termsList[j] = termsList[j].plus(value[i])
-
-                    } else {
-                        termsList.addAll(listOf<String>(value[i].toString(), ""))
-                        j += 2
-                    }
-                }
-            }
+        // when we start the operation, get the value of operationString, and
+        // call the function again recursively.
+        if (operation == "start") {
+            val operationValue = getValue() ?: return separateTerms("start", terms)
+            return separateTerms(operationValue, terms)
         }
-        return termsList
+
+        val numbers = ".1234567890"
+
+        // base case: we have cycled through all characters
+        if (operation.isEmpty()) return terms
+
+        val next = operation.drop(1)
+        val indexLast = terms.lastIndex
+
+        // when first character in operation is number, append to last string in
+        // terms
+        if (numbers.contains(operation[0])) {
+            val number = operation[0]
+            val updatedTerms = terms.take(indexLast) + (terms.last().plus(number))
+            return separateTerms(next, updatedTerms)
+        }
+
+        // when first character is operator, append to terms.
+        val operator: String = operation[0].toString()
+        val updatedTerms = terms.plus(operator).plus("")
+        return separateTerms(next, updatedTerms)
     }
 
     fun infixToPostfix(separatedTerms: List<String>): List<String> {
@@ -255,9 +315,9 @@ object CalculatorLogic {
 
         //Search for first Number-Number-Operator couple, and resolve it
         for (i in 2 until postFixExpression.size) {
-            if (operatorString.contains(postFixExpression[i])) {
-                if (!operatorString.contains(postFixExpression[i-1])
-                    && !operatorString.contains(postFixExpression[i-2])) {
+            if (infixOperatorString.contains(postFixExpression[i])) {
+                if (!infixOperatorString.contains(postFixExpression[i-1])
+                    && !infixOperatorString.contains(postFixExpression[i-2])) {
                     val operand1: Float = postFixExpression[i-2].toFloat()
                     val operand2: Float = postFixExpression[i-1].toFloat()
                     val operator: String = postFixExpression[i]
@@ -282,8 +342,6 @@ object CalculatorLogic {
                     newExpression.add(answer.toString())
 
                     newExpression.addAll(postFixExpression.drop(i + 1))
-
-                    Log.i("CalculatorLogic","$newExpression")
                     break
                 }
             }
@@ -296,25 +354,25 @@ object CalculatorLogic {
     fun updateAnswerString(){
 
         val separatedTerms: List<String> = separateTerms()
-        if (separatedTerms.size == 1) { answerString.value = separatedTerms[0]; return }
+        if (separatedTerms.size == 1) { computationString.value = separatedTerms[0]; return }
 
         val postFixExpression: List<String> = infixToPostfix(separatedTerms)
         val computation: Float = computePostFix(postFixExpression)
 
-        answerString.value = computation.toString()
+        computationString.value = computation.toString()
     }
 
     //History Text View
     private fun updateHistoryString() {
-        val operation = expression.value
-        val answer = answerString.value
-        val mList = recentHistoryList.value?.reverse()
+        val operation = operationString.value
+        val answer = computationString.value
+        val mList = recentExpressionsList.value?.reverse()
 
-        recentHistoryList.value?.add("$operation = $answer")
+        recentExpressionsList.value?.add("$operation = $answer")
     }
 
     fun removeHistoryString(position: Int) {
-        recentHistoryList.value?.removeAt(position)
+        recentExpressionsList.value?.removeAt(position)
 
     }
 

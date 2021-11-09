@@ -1,0 +1,10 @@
+
+
+    TODO
+-------------
+
+-all animations
+-recycler view for recents should scroll to bottom automatically
+-set up observers to add commas to values.
+-set up observers to format numbers to cast to int or float(round down)
+-text should shrink according to text length.

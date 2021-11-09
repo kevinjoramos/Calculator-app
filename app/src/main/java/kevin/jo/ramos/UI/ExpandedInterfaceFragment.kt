@@ -17,7 +17,6 @@ import kevin.jo.ramos.R
 import kevin.jo.ramos.UI.Adapters.RecentsAdapter
 import kevin.jo.ramos.data.Expression
 import kevin.jo.ramos.databinding.FragmentExpandedInterfaceBinding
-import kevin.jo.ramos.databinding.FragmentInterfaceBinding
 
 class ExpandedInterfaceFragment : Fragment() {
     val viewModel: MainViewModel by activityViewModels()
@@ -42,6 +41,7 @@ class ExpandedInterfaceFragment : Fragment() {
         navController = findNavController()
 
         //BUTTON ONCLICK LISTENERS
+        //Numbers
         binding.button0.setOnClickListener { onPushNumberButton(it) }
         binding.button1.setOnClickListener { onPushNumberButton(it) }
         binding.button2.setOnClickListener { onPushNumberButton(it) }
@@ -53,35 +53,39 @@ class ExpandedInterfaceFragment : Fragment() {
         binding.button8.setOnClickListener { onPushNumberButton(it) }
         binding.button9.setOnClickListener { onPushNumberButton(it) }
 
+        //Special Numbers
+        binding.buttonPi.setOnClickListener { onPushSpecialNumbers(it) }
+        binding.buttonE.setOnClickListener { onPushSpecialNumbers(it) }
+
+        //Infix Operators
+        binding.buttonAdd.setOnClickListener { onPushInfixOperatorButton(it) }
+        binding.buttonSubtract.setOnClickListener { onPushInfixOperatorButton(it) }
+        binding.buttonDivision.setOnClickListener { onPushInfixOperatorButton(it) }
+        binding.buttonMultiply.setOnClickListener { onPushInfixOperatorButton(it) }
+        binding.buttonExponent.setOnClickListener { onPushInfixOperatorButton(it) }
+
+        //Prefix Operators
+        binding.buttonPercent.setOnClickListener { onPushPrefixButton(it) }
+        binding.buttonFactorial.setOnClickListener { onPushPrefixButton(it) }
+        binding.buttonSquareRoot.setOnClickListener { onPushPrefixButton(it) }
+        binding.buttonLog.setOnClickListener { onPushPrefixButton(it) }
+        binding.buttonNaturalLog.setOnClickListener { onPushPrefixButton(it) }
+        binding.buttonSin.setOnClickListener { onPushPrefixButton(it) }
+        binding.buttonCos.setOnClickListener { onPushPrefixButton(it) }
+        binding.buttonTan.setOnClickListener { onPushPrefixButton(it) }
+
+        //Utility
         binding.buttonClear.setOnClickListener { onPushClear() }
         binding.buttonDelete.setOnClickListener { onPushDelete() }
-        binding.buttonPoint.setOnClickListener { viewModel.onPushButtonPeriod() }
-
-        binding.buttonAdd.setOnClickListener { onPushOperatorButton(it) }
-        binding.buttonSubtract.setOnClickListener { onPushOperatorButton(it) }
-        binding.buttonDivision.setOnClickListener { onPushOperatorButton(it) }
-        binding.buttonMultiply.setOnClickListener { onPushOperatorButton(it) }
-        binding.buttonPercent.setOnClickListener { viewModel.onPushButtonPercent() }
-
-        binding.buttonPi.setOnClickListener {  }
-        binding.buttonE.setOnClickListener {  }
-        binding.buttonFactorial.setOnClickListener {  }
-        binding.buttonSquareRoot.setOnClickListener {  }
-        binding.buttonExponent.setOnClickListener {  }
-
-        binding.buttonLog.setOnClickListener {  }
-        binding.buttonNaturalLog.setOnClickListener {  }
-        binding.buttonLeftParenthesis.setOnClickListener {  }
-        binding.buttonRightParenthesis.setOnClickListener {  }
-
-        binding.button2nd.setOnClickListener {  }
-        binding.buttonDegRad.setOnClickListener {  }
-        binding.buttonSin.setOnClickListener {  }
-        binding.buttonCos.setOnClickListener {  }
-        binding.buttonTan.setOnClickListener {  }
-
+        binding.buttonPoint.setOnClickListener { onPushPoint() }
+        binding.button2nd.setOnClickListener { onPush2nd() }
+        binding.buttonDegRad.setOnClickListener { onPushUnits() }
+        binding.buttonLeftParenthesis.setOnClickListener { onPushParenthesis(it) }
+        binding.buttonRightParenthesis.setOnClickListener { onPushParenthesis(it) }
         binding.buttonEqual.setOnClickListener { onPushEquals()}
         binding.buttonBlank.setOnClickListener { closeScientificCalculator(navController) }
+
+
 
         //ANSWER STRING OBSERVER - Updates the answer text view, and formatting.
         viewModel.currentAnswerString.observe(viewLifecycleOwner, Observer { answer ->
@@ -110,10 +114,6 @@ class ExpandedInterfaceFragment : Fragment() {
         return binding.root
     }
 
-    private fun closeScientificCalculator(navController: NavController) {
-        navController.navigate(R.id.action_expandedInterfaceFragment_to_interfaceFragment)
-    }
-
     private fun onPushNumberButton(view: View) {
 
         binding.operationText.setTextSize(50F)
@@ -124,20 +124,27 @@ class ExpandedInterfaceFragment : Fragment() {
 
         when (view) {
 
-            binding.button0 -> viewModel.onPushNumberButton("0")
-            binding.button1 -> viewModel.onPushNumberButton("1")
-            binding.button2 -> viewModel.onPushNumberButton("2")
-            binding.button3 -> viewModel.onPushNumberButton("3")
-            binding.button4 -> viewModel.onPushNumberButton("4")
-            binding.button5 -> viewModel.onPushNumberButton("5")
-            binding.button6 -> viewModel.onPushNumberButton("6")
-            binding.button7 -> viewModel.onPushNumberButton("7")
-            binding.button8 -> viewModel.onPushNumberButton("8")
-            binding.button9 -> viewModel.onPushNumberButton("9")
+            binding.button0 -> viewModel.insertNumber("0")
+            binding.button1 -> viewModel.insertNumber("1")
+            binding.button2 -> viewModel.insertNumber("2")
+            binding.button3 -> viewModel.insertNumber("3")
+            binding.button4 -> viewModel.insertNumber("4")
+            binding.button5 -> viewModel.insertNumber("5")
+            binding.button6 -> viewModel.insertNumber("6")
+            binding.button7 -> viewModel.insertNumber("7")
+            binding.button8 -> viewModel.insertNumber("8")
+            binding.button9 -> viewModel.insertNumber("9")
         }
     }
 
-    private fun onPushOperatorButton(view: View) {
+    private fun onPushSpecialNumbers(view: View) {
+        when (view) {
+            binding.buttonPi -> viewModel.insertSpecialNumber("π")
+            binding.buttonE -> viewModel.insertSpecialNumber("e")
+        }
+    }
+
+    private fun onPushInfixOperatorButton(view: View) {
 
         binding.operationText.setTextSize(50F)
         binding.operationText.setTextColor(Color.parseColor("#FFFFFFFF"))
@@ -146,22 +153,73 @@ class ExpandedInterfaceFragment : Fragment() {
         binding.answerText.setTextColor(Color.parseColor("#66FFFFFF"))
 
         when (view) {
-            binding.buttonAdd -> viewModel.onPushButtonOperator("+")
-            binding.buttonSubtract -> viewModel.onPushButtonOperator("-")
-            binding.buttonDivision -> viewModel.onPushButtonOperator("÷")
-            binding.buttonMultiply -> viewModel.onPushButtonOperator("×")
+            binding.buttonAdd -> viewModel.insertInfixOperator("+")
+            binding.buttonSubtract -> viewModel.insertInfixOperator("-")
+            binding.buttonDivision -> viewModel.insertInfixOperator("÷")
+            binding.buttonMultiply -> viewModel.insertInfixOperator("×")
+            binding.buttonExponent -> viewModel.insertInfixOperator("^")
+        }
+    }
+
+    private fun onPushPrefixButton(view: View) {
+        when (view) {
+            binding.buttonPercent -> viewModel.requestPercent()
+            binding.buttonFactorial -> viewModel.insertPrefixOperator("!")
+            binding.buttonSquareRoot -> viewModel.insertPrefixOperator("√")
+            binding.buttonLog -> viewModel.insertPrefixOperator("log")
+            binding.buttonNaturalLog -> viewModel.insertPrefixOperator("ln")
+            binding.buttonSin -> viewModel.insertPrefixOperator("sin")
+            binding.buttonCos -> viewModel.insertPrefixOperator("cos")
+            binding.buttonTan -> viewModel.insertPrefixOperator("tan")
+
         }
     }
 
     private fun onPushClear() {
-        viewModel.onPushButtonClear()
+        viewModel.requestClear()
         binding.operationText.setTextSize(50F)
         binding.answerText.setTextSize(32F)
 
     }
 
+    private fun onPushDelete() {
+        viewModel.requestDelete()
+        binding.operationText.setTextSize(50F)
+        binding.operationText.setTextColor(Color.parseColor("#FFFFFFFF"))
+
+        binding.answerText.setTextSize(32F)
+        binding.answerText.setTextColor(Color.parseColor("#66FFFFFF"))
+    }
+
+    private fun onPushPoint() {
+        viewModel.insertPoint(".")
+    }
+
+    private fun onPush2nd() {
+        viewModel.request2nd()
+    }
+
+    private fun onPushUnits() {
+        viewModel.requestChangeUnits()
+    }
+
+    private fun onPushParenthesis(view: View) {
+        when (view) {
+            binding.buttonLeftParenthesis -> viewModel.insertParenthesis("(")
+            binding.buttonRightParenthesis -> viewModel.insertParenthesis(")")
+        }
+    }
+
+
+
+
+
+
+
+
+
     private fun onPushEquals() {
-        viewModel.onPushButtonEquals()
+        viewModel.requestEquals()
         binding.operationText.setTextSize(32F)
         binding.operationText.setTextColor(Color.parseColor("#66FFFFFF"))
 
@@ -169,13 +227,10 @@ class ExpandedInterfaceFragment : Fragment() {
         binding.answerText.setTextColor(Color.parseColor("#FFFFFFFF"))
     }
 
-    private fun onPushDelete() {
-        viewModel.onPushButtonDelete()
-        binding.operationText.setTextSize(50F)
-        binding.operationText.setTextColor(Color.parseColor("#FFFFFFFF"))
 
-        binding.answerText.setTextSize(32F)
-        binding.answerText.setTextColor(Color.parseColor("#66FFFFFF"))
+
+    private fun closeScientificCalculator(navController: NavController) {
+        navController.navigate(R.id.action_expandedInterfaceFragment_to_interfaceFragment)
     }
 
     fun onBookmarkOperation(expression: Expression, adapterPosition: Int) {
