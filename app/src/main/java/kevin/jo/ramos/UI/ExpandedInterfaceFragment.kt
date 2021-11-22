@@ -66,6 +66,7 @@ class ExpandedInterfaceFragment : Fragment() {
 
         //Prefix Operators
         binding.buttonPercent.setOnClickListener { onPushPrefixButton(it) }
+        binding.buttonInverse.setOnClickListener { onPushPrefixButton(it) }
         binding.buttonFactorial.setOnClickListener { onPushPrefixButton(it) }
         binding.buttonSquareRoot.setOnClickListener { onPushPrefixButton(it) }
         binding.buttonLog.setOnClickListener { onPushPrefixButton(it) }
@@ -85,6 +86,16 @@ class ExpandedInterfaceFragment : Fragment() {
         binding.buttonEqual.setOnClickListener { onPushEquals()}
         binding.buttonBlank.setOnClickListener { closeScientificCalculator(navController) }
 
+
+        //TERM OF TERMS OBSERVER - represented in human readable form.
+        viewModel.currentExpression.observe(viewLifecycleOwner, Observer { terms ->
+            var operationString: String = ""
+            for (item in terms) {
+                operationString += item
+            }
+
+            binding.operationText.text = operationString
+        })
 
 
         //ANSWER STRING OBSERVER - Updates the answer text view, and formatting.
@@ -164,6 +175,7 @@ class ExpandedInterfaceFragment : Fragment() {
     private fun onPushPrefixButton(view: View) {
         when (view) {
             binding.buttonPercent -> viewModel.requestPercent()
+            binding.buttonInverse -> viewModel.insertPrefixOperator("inv")
             binding.buttonFactorial -> viewModel.insertPrefixOperator("!")
             binding.buttonSquareRoot -> viewModel.insertPrefixOperator("√")
             binding.buttonLog -> viewModel.insertPrefixOperator("log")

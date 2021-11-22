@@ -38,7 +38,6 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:layout_marginTop="16dp"
-            android:text="@{viewmodel.currentExpression.toString()}"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
             android:textSize="50sp"

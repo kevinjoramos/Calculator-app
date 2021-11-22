@@ -85,6 +85,16 @@ class InterfaceFragment : Fragment() {
             recyclerView.scrollToPosition(adapter.itemCount - 1) //TODO-> this works when I apply changes but not when running.
         })
 
+        //TERM OF TERMS OBSERVER - represented in human readable form.
+        viewModel.currentExpression.observe(viewLifecycleOwner, Observer { terms ->
+            var operationString: String = ""
+            for (item in terms) {
+                operationString += item
+            }
+
+            binding.operationText.text = operationString
+        })
+
         return binding.root
     }
 

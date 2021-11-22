@@ -40,7 +40,6 @@
             android:background="@color/obsidian_100"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="@{viewmodel.currentExpression.toString()}"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
             android:textSize="50sp"

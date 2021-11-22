@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     val expressionData: LiveData<List<Expression>>
     private val historyRepository: HistoryRepository
-    val currentExpression: LiveData<String> = CalculatorLogic.readOperationString
+    val currentExpression: LiveData<MutableList<String>> = CalculatorLogic.readTermList
     val currentHistoryList: LiveData<MutableList<String>> = CalculatorLogic.readRecentExpressionsList
     val currentAnswerString: LiveData<String> = CalculatorLogic.readComputationString
 
@@ -51,6 +51,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun insertPrefixOperator(char: String) {
+        if (char == "!") return CalculatorLogic.insertFactorial(char)
+        if (char == "inv") return CalculatorLogic.insertInverse()
         CalculatorLogic.insertPrefixOperator(char)
     }
 
