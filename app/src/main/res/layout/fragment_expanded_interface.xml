@@ -489,7 +489,7 @@
         <Button
             android:id="@+id/button_cos"
             style="@style/scientific_button"
-            android:text="cos"
+            android:text="@string/cos"
             android:background="@color/Grey_300"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toTopOf="@+id/button_left_parenthesis"

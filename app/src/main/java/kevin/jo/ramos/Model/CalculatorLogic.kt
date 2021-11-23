@@ -9,11 +9,14 @@ import kotlin.math.sin
 object CalculatorLogic {
     //Value used to know if operation is over, and if a new one can start.
     private var isReadyForReset = false
+    private val trigUnits = MutableLiveData<String>()
+    val readTrigUnits: LiveData<String>
+        get() = trigUnits
 
     //The expression being typed into the calculator by user.
     private val TermList = MutableLiveData<MutableList<String>>()
     val readTermList: LiveData<MutableList<String>>
-            get() = TermList
+        get() = TermList
 
     //The expression containing the answer to the expression.
     private val computationString = MutableLiveData<String>()
@@ -31,6 +34,7 @@ object CalculatorLogic {
         TermList.value = mutableListOf()
         computationString.value = ""
         recentExpressionsList.value = mutableListOf()
+        trigUnits.value = "degrees"
     }
 
     private fun getValue(): MutableList<String>? {
@@ -55,7 +59,7 @@ object CalculatorLogic {
 
 
         // when previous charter was a number, continue appending to number.
-        if (".0123456789".contains(terms.last().last())) {
+        if (".0123456789".contains(terms.last().last())) { //breaks when deleting to TODO
             terms[terms.lastIndex] += number
             TermList.value = terms
             return
@@ -119,7 +123,8 @@ object CalculatorLogic {
 
         // when the operator is sin, cos, etc.. we need to add "("
         // as well.
-        if (listOf("sin", "cos", "tan", "log", "ln").contains(operator)) {
+        if (listOf("sin", "cos", "tan", "arcsin", "arccos", "arctan", "log", "ln")
+                .contains(operator)) {
             terms.add(operator)
             terms.add("(")
             TermList.value = terms
@@ -220,12 +225,15 @@ object CalculatorLogic {
         }
     }
 
-    fun open2ndMenu() {
-
-    }
-
     fun changeUnits() {
+        val unitType = trigUnits.value ?: return
 
+        if (unitType == "degrees") {
+            trigUnits.value = "radians"
+            return
+        }
+
+        trigUnits.value = "degrees"
     }
 
     fun insertParenthesis(parenthesis: String) {
@@ -268,7 +276,7 @@ object CalculatorLogic {
     }
 
     private fun onButtonAfterEquals(isNumberButton: Boolean) {
-        /*val computationValue: String = computationString.value ?: return
+        val computationValue: String = computationString.value ?: return
         isReadyForReset = false
 
         // when user enters a number after pushing equals, immediately start
@@ -279,11 +287,16 @@ object CalculatorLogic {
         // and continue.
         val answer = computationValue
         clear()
-        TermList.value = answer*/
+
+        val terms = mutableListOf<String>()
+        terms.add(answer)
+
+        TermList.value = terms
     }
 
     private fun compute() {
         val terms = getValue() ?: return
+        val units = trigUnits.value ?: return
 
         // guard only 1 operand with no operators
         if (terms.size == 1) {
@@ -389,8 +402,13 @@ object CalculatorLogic {
                 if (operatorStack.last() == "sin") {
                     operatorStack.removeLast()
 
-                    val operand = computationValue.removeLast()
-                    val answer = sin(operand.toFloat())
+                    var operand = computationValue.removeLast().toFloat()
+
+                    if (units == "degrees") {
+                        operand *= (PI.toFloat() / 180)
+                    }
+
+                    val answer = sin(operand)
 
                     if (answer.mod(1.0) == 0.0) {
                         computationValue.add(answer.toInt().toString())
@@ -402,8 +420,13 @@ object CalculatorLogic {
                 else if  (operatorStack.last() == "cos") {
                     operatorStack.removeLast()
 
-                    val operand = computationValue.removeLast()
-                    val answer = cos(operand.toFloat())
+                    var operand = computationValue.removeLast().toFloat()
+
+                    if (units == "degrees") {
+                        operand *= (PI.toFloat() / 180)
+                    }
+
+                    val answer = cos(operand)
 
                     if (answer.mod(1.0) == 0.0) {
                         computationValue.add(answer.toInt().toString())
@@ -415,8 +438,13 @@ object CalculatorLogic {
                 else if (operatorStack.last() == "tan") {
                     operatorStack.removeLast()
 
-                    val operand = computationValue.removeLast()
-                    val answer = tan(operand.toFloat())
+                    var operand = computationValue.removeLast().toFloat()
+
+                    if (units == "degrees") {
+                        operand *= (PI.toFloat() / 180)
+                    }
+
+                    val answer = tan(operand)
 
                     if (answer.mod(1.0) == 0.0) {
                         computationValue.add(answer.toInt().toString())
@@ -489,7 +517,6 @@ object CalculatorLogic {
                         computationValue.add(answer.toString())
                     }
                 }
-
                 continue
             }
 
@@ -515,17 +542,17 @@ object CalculatorLogic {
             }
 
             if (item == "arcsin") {
-                operatorStack.add("sin")
+                operatorStack.add("arcsin")
                 continue
             }
 
             if (item == "arccos") {
-                operatorStack.add("cos")
+                operatorStack.add("arccos")
                 continue
             }
 
             if (item == "arctan") {
-                operatorStack.add("tan")
+                operatorStack.add("arctan")
                 continue
             }
 
@@ -585,31 +612,31 @@ object CalculatorLogic {
             answer = operand1.toFloat().minus(operand2.toFloat())
         }
 
-        if (operator == "+") {
+        else if (operator == "+") {
             val operand2 = computationValue.removeLast()
             val operand1 = computationValue.removeLast()
             answer = operand1.toFloat().plus(operand2.toFloat())
         }
 
-        if (operator == "÷") {
+        else if (operator == "÷") {
             val operand2 = computationValue.removeLast()
             val operand1 = computationValue.removeLast()
             answer = operand1.toFloat().div(operand2.toFloat())
         }
 
-        if (operator == "×") {
+        else if (operator == "×") {
             val operand2 = computationValue.removeLast()
             val operand1 = computationValue.removeLast()
             answer = operand1.toFloat().times(operand2.toFloat())
         }
 
-        if (operator == "^") {
+        else if (operator == "^") {
             val operand2 = computationValue.removeLast()
             val operand1 = computationValue.removeLast()
             answer = operand1.toFloat().pow(operand2.toFloat())
         }
 
-        if (operator == "√") {
+        else if (operator == "√") {
             val operand1 = computationValue.removeLast()
             answer = sqrt(operand1.toFloat())
         }

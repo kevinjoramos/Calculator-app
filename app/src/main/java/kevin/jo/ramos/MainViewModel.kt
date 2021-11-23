@@ -17,6 +17,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val currentExpression: LiveData<MutableList<String>> = CalculatorLogic.readTermList
     val currentHistoryList: LiveData<MutableList<String>> = CalculatorLogic.readRecentExpressionsList
     val currentAnswerString: LiveData<String> = CalculatorLogic.readComputationString
+    val currentUnitType: LiveData<String> = CalculatorLogic.readTrigUnits
 
     init {
         val expressionDao = AppDatabase.getDatabase(application).expressionDao()
@@ -71,10 +72,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun insertPoint(char: String) {
         CalculatorLogic.insertPeriod()
-    }
-
-    fun request2nd() {
-        CalculatorLogic.open2ndMenu()
     }
 
     fun requestChangeUnits() {

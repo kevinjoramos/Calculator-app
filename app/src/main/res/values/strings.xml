@@ -26,4 +26,8 @@
     <string name="textview">TextView</string>
     <string name="operation_history">Operation History</string>
     <string name="bookmarks">Bookmarks</string>
+    <string name="arcsin">arcsin</string>
+    <string name="cos">cos</string>
+    <string name="arccos">arccos</string>
+    <string name="arctan">arctan</string>
 </resources>
