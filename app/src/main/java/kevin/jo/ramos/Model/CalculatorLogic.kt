@@ -119,7 +119,8 @@ object CalculatorLogic {
 
         // when the operator is sin, cos, etc.. we need to add "("
         // as well.
-        if (listOf("sin", "cos", "tan", "log", "ln").contains(operator)) {
+        if (listOf("sin", "cos", "tan", "arcsin", "arccos", "arctan", "log", "ln")
+                .contains(operator)) {
             terms.add(operator)
             terms.add("(")
             TermList.value = terms
@@ -489,7 +490,6 @@ object CalculatorLogic {
                         computationValue.add(answer.toString())
                     }
                 }
-
                 continue
             }
 
@@ -515,17 +515,17 @@ object CalculatorLogic {
             }
 
             if (item == "arcsin") {
-                operatorStack.add("sin")
+                operatorStack.add("arcsin")
                 continue
             }
 
             if (item == "arccos") {
-                operatorStack.add("cos")
+                operatorStack.add("arccos")
                 continue
             }
 
             if (item == "arctan") {
-                operatorStack.add("tan")
+                operatorStack.add("arctan")
                 continue
             }
 
@@ -585,31 +585,31 @@ object CalculatorLogic {
             answer = operand1.toFloat().minus(operand2.toFloat())
         }
 
-        if (operator == "+") {
+        else if (operator == "+") {
             val operand2 = computationValue.removeLast()
             val operand1 = computationValue.removeLast()
             answer = operand1.toFloat().plus(operand2.toFloat())
         }
 
-        if (operator == "÷") {
+        else if (operator == "÷") {
             val operand2 = computationValue.removeLast()
             val operand1 = computationValue.removeLast()
             answer = operand1.toFloat().div(operand2.toFloat())
         }
 
-        if (operator == "×") {
+        else if (operator == "×") {
             val operand2 = computationValue.removeLast()
             val operand1 = computationValue.removeLast()
             answer = operand1.toFloat().times(operand2.toFloat())
         }
 
-        if (operator == "^") {
+        else if (operator == "^") {
             val operand2 = computationValue.removeLast()
             val operand1 = computationValue.removeLast()
             answer = operand1.toFloat().pow(operand2.toFloat())
         }
 
-        if (operator == "√") {
+        else if (operator == "√") {
             val operand1 = computationValue.removeLast()
             answer = sqrt(operand1.toFloat())
         }

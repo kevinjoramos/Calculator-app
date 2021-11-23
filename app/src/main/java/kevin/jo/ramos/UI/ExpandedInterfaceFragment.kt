@@ -2,6 +2,7 @@ package kevin.jo.ramos.UI
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.lifecycle.Observer
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -76,6 +77,7 @@ class ExpandedInterfaceFragment : Fragment() {
         binding.buttonTan.setOnClickListener { onPushPrefixButton(it) }
 
         //Utility
+        binding.button2nd.setOnClickListener { onPush2nd() }
         binding.buttonClear.setOnClickListener { onPushClear() }
         binding.buttonDelete.setOnClickListener { onPushDelete() }
         binding.buttonPoint.setOnClickListener { onPushPoint() }
@@ -180,9 +182,9 @@ class ExpandedInterfaceFragment : Fragment() {
             binding.buttonSquareRoot -> viewModel.insertPrefixOperator("√")
             binding.buttonLog -> viewModel.insertPrefixOperator("log")
             binding.buttonNaturalLog -> viewModel.insertPrefixOperator("ln")
-            binding.buttonSin -> viewModel.insertPrefixOperator("sin")
-            binding.buttonCos -> viewModel.insertPrefixOperator("cos")
-            binding.buttonTan -> viewModel.insertPrefixOperator("tan")
+            binding.buttonSin -> viewModel.insertPrefixOperator(binding.buttonSin.text.toString())
+            binding.buttonCos -> viewModel.insertPrefixOperator(binding.buttonCos.text.toString())
+            binding.buttonTan -> viewModel.insertPrefixOperator(binding.buttonTan.text.toString())
 
         }
     }
@@ -208,7 +210,27 @@ class ExpandedInterfaceFragment : Fragment() {
     }
 
     private fun onPush2nd() {
-        viewModel.request2nd()
+        if (binding.buttonSin.text == "sin") {
+            binding.buttonSin.text = "arcsin"
+            binding.buttonSin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
+
+            binding.buttonCos.text = "arccos"
+            binding.buttonCos.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
+
+            binding.buttonTan.text = "arctan"
+            binding.buttonTan.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
+
+        } else {
+            binding.buttonSin.text = "sin"
+            binding.buttonSin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+
+            binding.buttonCos.text = "cos"
+            binding.buttonCos.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+
+            binding.buttonTan.text = "tan"
+            binding.buttonTan.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+        }
+
     }
 
     private fun onPushUnits() {
