@@ -220,11 +220,9 @@ class ExpandedInterfaceFragment : Fragment() {
 
     private fun onPush2nd() {
         if (binding.buttonSin.text == "sin") {
-<<<<<<< HEAD
 
             // change button labels and inputs.
-=======
->>>>>>> a236eb60313edae1a7e9ddfdecefde02d649f1f2
+
             binding.buttonSin.text = "arcsin"
             binding.buttonSin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
 
@@ -234,7 +232,6 @@ class ExpandedInterfaceFragment : Fragment() {
             binding.buttonTan.text = "arctan"
             binding.buttonTan.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
 
-<<<<<<< HEAD
             // disable changing to degrees for inverse trig functions
             if (viewModel.currentUnitType.value == "degrees") {
                 viewModel.requestChangeUnits()
@@ -243,9 +240,6 @@ class ExpandedInterfaceFragment : Fragment() {
             binding.buttonDegRad.setOnClickListener {  }
             binding.buttonDegRad.setTextColor(Color.parseColor("#44FFFFFF"))
 
-
-=======
->>>>>>> a236eb60313edae1a7e9ddfdecefde02d649f1f2
         } else {
             binding.buttonSin.text = "sin"
             binding.buttonSin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
@@ -255,19 +249,14 @@ class ExpandedInterfaceFragment : Fragment() {
 
             binding.buttonTan.text = "tan"
             binding.buttonTan.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
-<<<<<<< HEAD
 
             binding.buttonDegRad.setOnClickListener { onPushUnits() }
             binding.buttonDegRad.setTextColor(Color.parseColor("#FFFFFFFF"))
         }
-
-
-
-=======
-        }
-
->>>>>>> a236eb60313edae1a7e9ddfdecefde02d649f1f2
     }
+
+
+
 
     private fun onPushUnits() {
         viewModel.requestChangeUnits()
