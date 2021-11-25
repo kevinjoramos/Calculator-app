@@ -60,7 +60,7 @@ class ExpandedInterfaceFragment : Fragment() {
 
         //Infix Operators
         binding.buttonAdd.setOnClickListener { onPushInfixOperatorButton(it) }
-        binding.buttonSubtract.setOnClickListener { onPushInfixOperatorButton(it) }
+        binding.buttonSubtractAdvanced.setOnClickListener { onPushInfixOperatorButton(it) }
         binding.buttonDivision.setOnClickListener { onPushInfixOperatorButton(it) }
         binding.buttonMultiply.setOnClickListener { onPushInfixOperatorButton(it) }
         binding.buttonExponent.setOnClickListener { onPushInfixOperatorButton(it) }
@@ -176,7 +176,7 @@ class ExpandedInterfaceFragment : Fragment() {
 
         when (view) {
             binding.buttonAdd -> viewModel.insertInfixOperator("+")
-            binding.buttonSubtract -> viewModel.insertInfixOperator("-")
+            binding.buttonSubtractAdvanced -> viewModel.advanceSubtract()
             binding.buttonDivision -> viewModel.insertInfixOperator("÷")
             binding.buttonMultiply -> viewModel.insertInfixOperator("×")
             binding.buttonExponent -> viewModel.insertInfixOperator("^")

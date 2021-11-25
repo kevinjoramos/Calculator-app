@@ -65,6 +65,19 @@ object CalculatorLogic {
             return
         }
 
+        // when only minus sign, we start with negative number.
+        if (terms.size == 1 && terms.last() == "-") {
+            terms[terms.lastIndex] += number
+            TermList.value = terms
+            return
+        }
+
+        if (terms.last() == "-" && terms[terms.size - 2] == "(") {
+            terms[terms.lastIndex] += number
+            TermList.value = terms
+            return
+        }
+
         // when previous char is operator, we append the number as a new item
         // to the list.
         terms.add(number)
@@ -116,6 +129,26 @@ object CalculatorLogic {
         terms.add(char)
         TermList.value = terms
 
+    }
+
+    fun insertAdvanceSubtract() {
+        val terms = getValue() ?: return
+
+        if (terms.isEmpty()) {
+            terms.add("-")
+            TermList.value = terms
+            return
+        }
+
+        if ("+-×÷^".contains(terms.last())) {
+            terms.add("(")
+            terms.add("-")
+            TermList.value = terms
+            return
+        }
+
+        terms.add("-")
+        TermList.value = terms
     }
 
     fun insertPrefixOperator(operator: String) {
@@ -309,7 +342,14 @@ object CalculatorLogic {
         var operatorStack = mutableListOf<String>()
 
         for (item in terms) {
+
             if (item == "-") {
+                if (item === terms[0]) {
+                    computationValue.add("0")
+                    operatorStack.add("-")
+                    continue
+                }
+
                 if (operatorStack.isEmpty()) {
                     operatorStack.add(item)
                     continue
@@ -669,5 +709,7 @@ object CalculatorLogic {
         recentExpressionsList.value?.removeAt(position)
 
     }
+
+
 
 }

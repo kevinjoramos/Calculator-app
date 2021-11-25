@@ -93,8 +93,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-
-
+    fun advanceSubtract() {
+        CalculatorLogic.insertAdvanceSubtract()
+    }
 
 
 }
