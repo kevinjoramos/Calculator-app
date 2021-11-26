@@ -341,101 +341,109 @@ object CalculatorLogic {
         var computationValue = mutableListOf<String>()
         var operatorStack = mutableListOf<String>()
 
-        for (item in terms) {
+        for (i in terms.indices) {
 
-            if (item == "-") {
-                if (item === terms[0]) {
+            if (terms[i] == "-") {
+                // when we
+                if (i == 0) {
+                    computationValue.add("0")
+                    operatorStack.add("-")
+                    continue
+                }
+
+                if (terms[i-1] == "(") {
                     computationValue.add("0")
                     operatorStack.add("-")
                     continue
                 }
 
                 if (operatorStack.isEmpty()) {
-                    operatorStack.add(item)
+                    operatorStack.add(terms[i])
                     continue
                 }
 
                 val (stack, computation) = poppingTheStack(operatorStack, computationValue)
                 operatorStack = stack
-                operatorStack.add(item)
+                operatorStack.add(terms[i])
                 computationValue = computation
                 continue
             }
 
-
-
-            if (item == "+") {
+            if (terms[i] == "+") {
                 if (operatorStack.isEmpty()) {
-                    operatorStack.add(item)
+                    operatorStack.add(terms[i])
                     continue
                 }
 
                 if ("-+".contains(operatorStack.last())) {
-                    operatorStack.add(item)
+                    operatorStack.add(terms[i])
                     continue
                 }
 
                 val (stack, computation) = poppingTheStack(operatorStack, computationValue)
                 operatorStack = stack
-                operatorStack.add(item)
+                operatorStack.add(terms[i])
                 computationValue = computation
                 continue
             }
 
-            if (item == "÷") {
+            if (terms[i] == "÷") {
                 if (operatorStack.isEmpty()) {
-                    operatorStack.add(item)
+                    operatorStack.add(terms[i])
                     continue
                 }
 
-                if ("-+÷".contains(operatorStack.last())) {
-                    operatorStack.add(item)
+                if ("-+".contains(operatorStack.last())) {
+                    operatorStack.add(terms[i])
                     continue
                 }
 
                 val (stack, computation) = poppingTheStack(operatorStack, computationValue)
                 operatorStack = stack
-                operatorStack.add(item)
+                operatorStack.add(terms[i])
                 computationValue = computation
                 continue
             }
 
-            if (item == "×") {
+            if (terms[i] == "×") {
                 if (operatorStack.isEmpty()) {
-                    operatorStack.add(item)
+                    operatorStack.add(terms[i])
                     continue
                 }
 
                 if ("-+÷×".contains(operatorStack.last())) {
-                    operatorStack.add(item)
+                    operatorStack.add(terms[i])
                     continue
                 }
 
                 val (stack, computation) = poppingTheStack(operatorStack, computationValue)
                 operatorStack = stack
-                operatorStack.add(item)
+                operatorStack.add(terms[i])
                 computationValue = computation
                 continue
             }
 
-            if (item == "^") {
-                operatorStack.add(item)
+            if (terms[i] == "^") {
+                operatorStack.add(terms[i])
                 continue
             }
 
-            if (item == "e") { computationValue.add("2.71828183"); continue }
+            if (terms[i] == "e") { computationValue.add("2.71828183"); continue }
 
-            if (item == "π") { computationValue.add("3.14159265"); continue}
+            if (terms[i] == "π") { computationValue.add("3.14159265"); continue}
 
-            if (item == "(") { operatorStack.add("("); continue}
+            if (terms[i] == "(") { operatorStack.add("("); continue}
 
-            if (item == ")") {
+            if (terms[i] == ")") {
                 val (stack, computation) = poppingTheStack(operatorStack, computationValue)
                 operatorStack = stack
                 computationValue = computation
 
                 // when we reach the end of parent, remove it.
                 operatorStack.removeLast()
+
+                // make sure list is not empty before checking for trig.
+                if (operatorStack.isEmpty()) continue
 
                 // when a trig or log function was called before parent
                 // compute it.
@@ -450,7 +458,8 @@ object CalculatorLogic {
 
                     val answer = sin(operand)
 
-                    if (answer.mod(1.0) == 0.0) {
+                    if (answer.mod(1.0) == 0.0 &&
+                        (answer < 2_147_483_648 && answer > -2_147_483_647)) {
                         computationValue.add(answer.toInt().toString())
                     } else {
                         computationValue.add(answer.toString())
@@ -468,7 +477,8 @@ object CalculatorLogic {
 
                     val answer = cos(operand)
 
-                    if (answer.mod(1.0) == 0.0) {
+                    if (answer.mod(1.0) == 0.0 &&
+                        (answer < 2_147_483_648 && answer > -2_147_483_647)) {
                         computationValue.add(answer.toInt().toString())
                     } else {
                         computationValue.add(answer.toString())
@@ -486,7 +496,8 @@ object CalculatorLogic {
 
                     val answer = tan(operand)
 
-                    if (answer.mod(1.0) == 0.0) {
+                    if (answer.mod(1.0) == 0.0 &&
+                        (answer < 2_147_483_648 && answer > -2_147_483_647)) {
                         computationValue.add(answer.toInt().toString())
                     } else {
                         computationValue.add(answer.toString())
@@ -499,7 +510,8 @@ object CalculatorLogic {
                     val operand = computationValue.removeLast()
                     val answer = asin(operand.toFloat())
 
-                    if (answer.mod(1.0) == 0.0) {
+                    if (answer.mod(1.0) == 0.0 &&
+                        (answer < 2_147_483_648 && answer > -2_147_483_647)) {
                         computationValue.add(answer.toInt().toString())
                     } else {
                         computationValue.add(answer.toString())
@@ -512,7 +524,8 @@ object CalculatorLogic {
                     val operand = computationValue.removeLast()
                     val answer = acos(operand.toFloat())
 
-                    if (answer.mod(1.0) == 0.0) {
+                    if (answer.mod(1.0) == 0.0 &&
+                        (answer < 2_147_483_648 && answer > -2_147_483_647)) {
                         computationValue.add(answer.toInt().toString())
                     } else {
                         computationValue.add(answer.toString())
@@ -525,7 +538,8 @@ object CalculatorLogic {
                     val operand = computationValue.removeLast()
                     val answer = atan(operand.toFloat())
 
-                    if (answer.mod(1.0) == 0.0) {
+                    if (answer.mod(1.0) == 0.0 &&
+                        (answer < 2_147_483_648 && answer > -2_147_483_647)) {
                         computationValue.add(answer.toInt().toString())
                     } else {
                         computationValue.add(answer.toString())
@@ -538,7 +552,8 @@ object CalculatorLogic {
                     val operand = computationValue.removeLast()
                     val answer = log10(operand.toFloat())
 
-                    if (answer.mod(1.0) == 0.0) {
+                    if (answer.mod(1.0) == 0.0 &&
+                        (answer < 2_147_483_648 && answer > -2_147_483_647)) {
                         computationValue.add(answer.toInt().toString())
                     } else {
                         computationValue.add(answer.toString())
@@ -551,7 +566,8 @@ object CalculatorLogic {
                     val operand = computationValue.removeLast()
                     val answer = ln(operand.toFloat())
 
-                    if (answer.mod(1.0) == 0.0) {
+                    if (answer.mod(1.0) == 0.0 &&
+                        (answer < 2_147_483_648 && answer > -2_147_483_647)) {
                         computationValue.add(answer.toInt().toString())
                     } else {
                         computationValue.add(answer.toString())
@@ -560,60 +576,71 @@ object CalculatorLogic {
                 continue
             }
 
-            if (item == "!") {
+            if (terms[i] == "!") {
                 val factorial = computeFactorial(computationValue.removeLast().toInt())
-                computationValue.add(factorial.toString())
+
+                if (factorial.mod(1.0) == 0.0 &&
+                    (factorial < 2_147_483_648 && factorial > -2_147_483_647)) {
+                    computationValue.add(factorial.toInt().toString())
+                } else {
+                    computationValue.add(factorial.toString())
+                }
                 continue
             }
 
-            if (item == "sin") {
+            if (terms[i] == "sin") {
                 operatorStack.add("sin")
                 continue
             }
 
-            if (item == "cos") {
+            if (terms[i] == "cos") {
                 operatorStack.add("cos")
                 continue
             }
 
-            if (item == "tan") {
+            if (terms[i] == "tan") {
                 operatorStack.add("tan")
                 continue
             }
 
-            if (item == "arcsin") {
+            if (terms[i] == "arcsin") {
                 operatorStack.add("arcsin")
                 continue
             }
 
-            if (item == "arccos") {
+            if (terms[i] == "arccos") {
                 operatorStack.add("arccos")
                 continue
             }
 
-            if (item == "arctan") {
+            if (terms[i] == "arctan") {
                 operatorStack.add("arctan")
                 continue
             }
 
-            if (item == "log") {
+            if (terms[i] == "log") {
                 operatorStack.add("log")
                 continue
             }
 
-            if (item == "ln") {
+            if (terms[i] == "ln") {
                 operatorStack.add("ln")
                 continue
             }
 
-            if (item == "√") {
+            if (terms[i] == "√") {
                 operatorStack.add("√")
                 continue
             }
 
-            Log.i("CalculatorLogic", "Durring: \nnStack: $operatorStack \n computation: $computationValue")
+            computationValue.add(terms[i])
 
-            computationValue.add(item)
+            Log.i("CalculatorLogic",
+                "\nTermList: $terms" +
+                    "\nterm: ${terms[i]}" +
+                    "\nPOST: $computationValue" +
+                    "\nStack: $operatorStack")
+
         }
 
         if (operatorStack.isNotEmpty()) {
@@ -622,7 +649,6 @@ object CalculatorLogic {
         }
 
         computationString.value = computationValue[0]
-        Log.i("CalculatorLogic", "End: \nnStack: $operatorStack \n computation: $computationValue")
         return
 
     }
@@ -630,8 +656,6 @@ object CalculatorLogic {
     fun poppingTheStack(operatorStack: MutableList<String>,
                         computationValue: MutableList<String>):
             Pair<MutableList<String>, MutableList<String>> {
-
-        Log.i("CalculatorLogic", "pop: \nnStack: $operatorStack \n computation: $computationValue")
 
         // when we pop till the end of the stack exit recursion.
         if (operatorStack.isEmpty()) return Pair(operatorStack, computationValue)
@@ -682,7 +706,8 @@ object CalculatorLogic {
         }
 
         // when answer can be integer cast to integer.
-        if (answer.mod(1.0) == 0.0) {
+        if (answer.mod(1.0) == 0.0 &&
+            (answer < 2_147_483_648 && answer > -2_147_483_647)) {
             computationValue.add(answer.toInt().toString())
         } else {
             computationValue.add(answer.toString())
@@ -691,9 +716,11 @@ object CalculatorLogic {
         return poppingTheStack(operatorStack, computationValue)
     }
 
-    private fun computeFactorial(number: Int): Int {
-        if (number == 0) return 1
-        return number * computeFactorial(number - 1)
+    private fun computeFactorial(number: Int): Float {
+        val decimal = number.toFloat()
+
+        if (decimal == 0f) return 1f
+        return decimal * computeFactorial(decimal.toInt() - 1)
     }
 
     //History Text View
