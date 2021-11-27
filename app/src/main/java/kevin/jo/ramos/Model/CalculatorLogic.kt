@@ -135,6 +135,40 @@ object CalculatorLogic {
         }
     }
 
+    fun insertPreviousAnswer(answer: String) {
+        // start a new operation if the previous button that was pushed was equals.
+        if (isReadyForReset) onButtonAfterEquals(true)
+
+        val terms = getValue() ?: return
+
+        // when no item was inserted, insert the answer.
+        if (terms.isEmpty()) {
+            terms.add(answer)
+            TermList.value = terms
+
+            try {
+                compute()
+            } catch (e: Exception) {
+                Log.i("CalculatorLogic","exception occurred: $e")
+                computationString.value = "Error"
+            }
+            return
+        }
+
+        // guard previous item not an operator
+        if (".0123456789)".contains(terms.last().last())) return
+
+        terms.add(answer)
+        TermList.value = terms
+
+        try {
+            compute()
+        } catch (e: Exception) {
+            Log.i("CalculatorLogic","exception occurred: $e")
+            computationString.value = "Error"
+        }
+    }
+
     fun insertInfixOperator(char: String) {
         // if operator is inserted after pushing equals, we continue with the previous
         // expression.

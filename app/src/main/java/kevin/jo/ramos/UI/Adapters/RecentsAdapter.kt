@@ -10,7 +10,8 @@ import kevin.jo.ramos.R
 import kevin.jo.ramos.data.Expression
 import java.util.Collections.reverse
 
-class RecentsAdapter(private val onBookmarkOperation: (Expression, Int) -> Unit):
+class RecentsAdapter(private val onBookmarkOperation: (Expression, Int) -> Unit,
+                     private val onClickRecent: (String) -> Unit):
     RecyclerView.Adapter<RecentsAdapter.RecentViewHolder>() {
 
     private lateinit var dataSet: MutableList<String>
@@ -22,6 +23,12 @@ class RecentsAdapter(private val onBookmarkOperation: (Expression, Int) -> Unit)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewHolder {
         val view = RecentViewHolder(LayoutInflater.from(parent.context)
             .inflate(R.layout.interface_recents_holder, parent, false))
+
+        view.itemView.findViewById<TextView>(R.id.txt_recent).setOnClickListener {
+            val text = view.itemView.findViewById<TextView>(R.id.txt_recent).text
+            val computationString = text.split(" ")[2]
+            onClickRecent(computationString)
+        }
 
         view.itemView.findViewById<ImageButton>(R.id.add_query_button).setOnClickListener {
             val text = view.itemView.findViewById<TextView>(R.id.txt_recent).text

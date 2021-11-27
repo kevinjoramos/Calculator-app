@@ -75,7 +75,7 @@ class InterfaceFragment : Fragment() {
 
 
         //Recycler View
-        val adapter = RecentsAdapter(::onBookmarkOperation)
+        val adapter = RecentsAdapter(::onBookmarkOperation, ::onClickRecent)
         val recyclerView = binding.recentExpressions
         recyclerView.adapter = adapter
 
@@ -121,6 +121,10 @@ class InterfaceFragment : Fragment() {
             binding.button8 -> viewModel.insertNumber("8")
             binding.button9 -> viewModel.insertNumber("9")
         }
+    }
+
+    private fun onClickRecent(answer: String) {
+        viewModel.insertPreviousAnswer(answer)
     }
 
     private fun onPushOperatorButton(view: View, binding: FragmentInterfaceBinding,

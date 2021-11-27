@@ -123,7 +123,7 @@ class ExpandedInterfaceFragment : Fragment() {
 
 
         //Recycler View
-        val adapter = RecentsAdapter(::onBookmarkOperation)
+        val adapter = RecentsAdapter(::onBookmarkOperation, ::onClickRecent)
         val recyclerView = binding.recentExpressions
         recyclerView.adapter = adapter
 
@@ -164,6 +164,10 @@ class ExpandedInterfaceFragment : Fragment() {
             binding.buttonPi -> viewModel.insertSpecialNumber("π")
             binding.buttonE -> viewModel.insertSpecialNumber("e")
         }
+    }
+
+    private fun onClickRecent(answer: String) {
+        viewModel.insertPreviousAnswer(answer)
     }
 
     private fun onPushInfixOperatorButton(view: View) {

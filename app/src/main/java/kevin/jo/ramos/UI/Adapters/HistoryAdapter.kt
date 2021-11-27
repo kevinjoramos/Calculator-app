@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kevin.jo.ramos.R
 import kevin.jo.ramos.data.Expression
 
-class HistoryAdapter(private val onDeleteBookmark: (String) -> Unit):
+class HistoryAdapter(private val onDeleteBookmark: (String) -> Unit,
+                     private val onClickBookmark: (String) -> Unit):
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     private var historyData: MutableList<Expression>
@@ -24,11 +25,19 @@ class HistoryAdapter(private val onDeleteBookmark: (String) -> Unit):
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val view = HistoryViewHolder(LayoutInflater.from(parent.context)
             .inflate(R.layout.history_operation_holder, parent, false))
+
         view.itemView.findViewById<ImageButton>(R.id.delete_query_button).setOnClickListener {
             val text = view.itemView.findViewById<TextView>(R.id.txt_recent).text
             val operationString = text.split(" ")[0]
             onDeleteBookmark(operationString)
             notifyItemRemoved(view.adapterPosition)
+        }
+
+        val text = view.itemView.findViewById<TextView>(R.id.txt_recent)
+
+        text.setOnClickListener {
+            val computationString = text.text.split(" ")[2]
+            onClickBookmark(computationString)
         }
 
         return view

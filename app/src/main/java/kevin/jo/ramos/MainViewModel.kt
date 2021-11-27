@@ -47,6 +47,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         CalculatorLogic.insertSpecialNumber(char)
     }
 
+    fun insertPreviousAnswer(answer: String) {
+        CalculatorLogic.insertPreviousAnswer(answer)
+    }
+
     fun insertInfixOperator(char: String) {
         CalculatorLogic.insertInfixOperator(char)
     }

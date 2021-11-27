@@ -25,8 +25,8 @@ class HistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
 
+        // Inflate the layout for this fragment
         val binding: FragmentHistoryBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_history, container, false)
 
@@ -34,7 +34,7 @@ class HistoryFragment : Fragment() {
         binding.viewmodel = viewModel
 
         //Recycler View
-        val adapter = HistoryAdapter(::onDeleteBookmark)
+        val adapter = HistoryAdapter(::onDeleteBookmark, ::onClickBookmark)
         val recyclerView = binding.historyRecycler
         recyclerView.adapter = adapter
 
@@ -49,5 +49,8 @@ class HistoryFragment : Fragment() {
         viewModel.removeExpressionFromDatabase(operationString)
     }
 
-
+    fun onClickBookmark(answer: String) {
+        viewModel.insertPreviousAnswer(answer)
+        (activity as MainActivity).onBackPressed()
+    }
 }
