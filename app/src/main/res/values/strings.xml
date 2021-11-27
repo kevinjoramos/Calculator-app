@@ -14,7 +14,7 @@
     <string name="button9_text">9</string>
 
     <string name="buttonClear_text">C</string>
-    <string name="buttonDelete_text">Del</string>
+    <string name="buttonDelete_text">del</string>
 
     <string name="buttonAdd_text">+</string>
     <string name="buttonSubtract_text">-</string>

@@ -28,8 +28,6 @@ object CalculatorLogic {
     val readRecentExpressionsList: LiveData<MutableList<String>>
         get() = recentExpressionsList
 
-    //infixOperatorString: String = "+-×÷"
-
     init {
         TermList.value = mutableListOf()
         computationString.value = ""
@@ -43,14 +41,22 @@ object CalculatorLogic {
 
     //Number Buttons:
     fun insertNumber(number: String) {
-        val terms = getValue() ?: return
-
         // start a new operation if the previous button that was pushed was equals.
         if (isReadyForReset) onButtonAfterEquals(true)
+
+        val terms = getValue() ?: return
 
         if (terms.isEmpty()) {
             terms.add(number)
             TermList.value = terms
+
+            try {
+                compute()
+            } catch (e: Exception) {
+                Log.i("CalculatorLogic","exception occurred: $e")
+                computationString.value = "Error"
+            }
+
             return
         }
 
@@ -62,6 +68,13 @@ object CalculatorLogic {
         if (".0123456789".contains(terms.last().last())) { //breaks when deleting to TODO
             terms[terms.lastIndex] += number
             TermList.value = terms
+
+            try {
+                compute()
+            } catch (e: Exception) {
+                Log.i("CalculatorLogic","exception occurred: $e")
+                computationString.value = "Error"
+            }
             return
         }
 
@@ -69,12 +82,26 @@ object CalculatorLogic {
         if (terms.size == 1 && terms.last() == "-") {
             terms[terms.lastIndex] += number
             TermList.value = terms
+
+            try {
+                compute()
+            } catch (e: Exception) {
+                Log.i("CalculatorLogic","exception occurred: $e")
+                computationString.value = "Error"
+            }
             return
         }
 
         if (terms.last() == "-" && terms[terms.size - 2] == "(") {
             terms[terms.lastIndex] += number
             TermList.value = terms
+
+            try {
+                compute()
+            } catch (e: Exception) {
+                Log.i("CalculatorLogic","exception occurred: $e")
+                computationString.value = "Error"
+            }
             return
         }
 
@@ -92,10 +119,10 @@ object CalculatorLogic {
     }
 
     fun insertSpecialNumber(number: String) {
-        val terms = getValue() ?: return
-
         // start a new operation if the previous button that was pushed was equals.
         if (isReadyForReset) onButtonAfterEquals(true)
+
+        val terms = getValue() ?: return
 
         terms.add(number)
         TermList.value = terms
@@ -109,6 +136,10 @@ object CalculatorLogic {
     }
 
     fun insertInfixOperator(char: String) {
+        // if operator is inserted after pushing equals, we continue with the previous
+        // expression.
+        if (isReadyForReset) onButtonAfterEquals(false)
+
         val terms = getValue() ?: return
 
         // guard operator first (cannot start with operator)
@@ -121,10 +152,6 @@ object CalculatorLogic {
             TermList.value = terms
             return
         }
-
-        // if operator is inserted after pushing equals, we continue with the previous
-        // expression.
-        if (isReadyForReset) onButtonAfterEquals(false)
 
         terms.add(char)
         TermList.value = terms
@@ -149,9 +176,13 @@ object CalculatorLogic {
 
         terms.add("-")
         TermList.value = terms
+
     }
 
     fun insertPrefixOperator(operator: String) {
+        // start a new operation if the previous button that was pushed was equals.
+        if (isReadyForReset) onButtonAfterEquals(true)
+
         val terms = getValue() ?: return
 
         // when the operator is sin, cos, etc.. we need to add "("
@@ -169,6 +200,8 @@ object CalculatorLogic {
     }
 
     fun insertFactorial(operator: String) {
+        if (isReadyForReset) onButtonAfterEquals(false)
+
         val terms = getValue() ?: return
 
         // guard putting factorial first.
@@ -176,9 +209,18 @@ object CalculatorLogic {
 
         terms.add(operator)
         TermList.value = terms
+
+        try {
+            compute()
+        } catch (e: Exception) {
+            Log.i("CalculatorLogic","exception occurred: $e")
+            computationString.value = "Error"
+        }
     }
 
     fun insertInverse() {
+        if (isReadyForReset) onButtonAfterEquals(false)
+
         val terms = getValue() ?: return
 
         // guard no operands
@@ -190,9 +232,18 @@ object CalculatorLogic {
         terms.add(")")
 
         TermList.value = terms
+
+        try {
+            compute()
+        } catch (e: Exception) {
+            Log.i("CalculatorLogic","exception occurred: $e")
+            computationString.value = "Error"
+        }
     }
 
     fun performPercent() {
+        if (isReadyForReset) onButtonAfterEquals(false)
+
         val terms = getValue() ?: return
 
         // guard no operands
@@ -206,6 +257,13 @@ object CalculatorLogic {
         terms.add(percentage.toString())
 
         TermList.value = terms
+
+        try {
+            compute()
+        } catch (e: Exception) {
+            Log.i("CalculatorLogic","exception occurred: $e")
+            computationString.value = "Error"
+        }
     }
 
 
@@ -228,8 +286,28 @@ object CalculatorLogic {
 
         // guard deleting from empty string.
         if (terms.isEmpty()) return
-        terms[terms.lastIndex] = terms.last().dropLast(1)
 
+
+        // when deleting infix
+        if (terms.last() == "(" && listOf("sin", "cos", "tan", "arcsin", "arccos", "arctan", "log", "ln")
+                .contains(terms[terms.lastIndex - 1])) {
+            terms.removeLast()
+            terms.removeLast()
+
+            TermList.value = terms
+            return
+        }
+
+        // when multi-digit item, only delete last digit.
+        if (terms.last().length > 1) {
+            terms[terms.lastIndex] = terms.last().dropLast(1)
+            TermList.value = terms
+            return
+
+        }
+
+        // when anything else delete the item.
+        terms.removeLast()
         TermList.value = terms
 
         try {
@@ -241,21 +319,35 @@ object CalculatorLogic {
     }
 
     fun insertPeriod() {
+        if (isReadyForReset) onButtonAfterEquals(true)
         val terms = getValue() ?: return
+
+        if (terms.isEmpty()) {
+            terms.add(".")
+            TermList.value = terms
+            return
+        }
+
 
         //guard more than 1 decimal point in a operand.
         if (terms.last().contains(".")) return
 
-        terms[terms.lastIndex] += "."
+        // when term is number, append to number.
+        if ("0123456789".contains(terms.last().last())) {
+            terms[terms.lastIndex] += "."
+            TermList.value = terms
 
-        TermList.value = terms
-
-        try {
-            compute()
-        } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
-            computationString.value = "Error"
+            try {
+                compute()
+            } catch (e: Exception) {
+                Log.i("CalculatorLogic","exception occurred: $e")
+                computationString.value = "Error"
+            }
+            return
         }
+
+        terms.add(".")
+        TermList.value = terms
     }
 
     fun changeUnits() {
@@ -270,7 +362,11 @@ object CalculatorLogic {
     }
 
     fun insertParenthesis(parenthesis: String) {
+        if (isReadyForReset) onButtonAfterEquals(true)
         val terms = getValue() ?: return
+
+        // start a new operation if the previous button that was pushed was equals.
+        if (isReadyForReset) onButtonAfterEquals(true)
 
         if (parenthesis == "(") {
             terms.add("(")
@@ -288,6 +384,13 @@ object CalculatorLogic {
         if (open < 1) return
         terms.add(")")
         TermList.value = terms
+
+        try {
+            compute()
+        } catch (e: Exception) {
+            Log.i("CalculatorLogic","exception occurred: $e")
+            computationString.value = "Error"
+        }
     }
 
     //Equals Function
@@ -303,27 +406,26 @@ object CalculatorLogic {
             Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
-        //updateHistoryString()
+        updateHistoryString()
         isReadyForReset = true
 
     }
 
-    private fun onButtonAfterEquals(isNumberButton: Boolean) {
-        val computationValue: String = computationString.value ?: return
+    private fun onButtonAfterEquals(isNewOperation: Boolean) {
+        val computation: String = computationString.value ?: return
         isReadyForReset = false
+
+        clear()
 
         // when user enters a number after pushing equals, immediately start
         // new operation.
-        if (isNumberButton) { clear(); return }
+        if (isNewOperation) return
+
+        val terms = mutableListOf<String>()
 
         // when user enters operator after pushing equals, collapse the expression
         // and continue.
-        val answer = computationValue
-        clear()
-
-        val terms = mutableListOf<String>()
-        terms.add(answer)
-
+        terms.add(computation)
         TermList.value = terms
     }
 
@@ -725,16 +827,21 @@ object CalculatorLogic {
 
     //History Text View
     private fun updateHistoryString() {
-        val operation = TermList.value
-        val answer = computationString.value
-        val mList = recentExpressionsList.value?.reverse()
+        val recentsList = recentExpressionsList.value ?: return
+        val terms = TermList.value ?: return
+        val computation = computationString.value ?: return
 
-        recentExpressionsList.value?.add("$operation = $answer")
+        var operation: String = ""
+        for (item in terms) {
+            operation += item
+        }
+
+        recentsList.add("$operation = $computation")
+        recentExpressionsList.value = recentsList
     }
 
     fun removeHistoryString(position: Int) {
         recentExpressionsList.value?.removeAt(position)
-
     }
 
 
