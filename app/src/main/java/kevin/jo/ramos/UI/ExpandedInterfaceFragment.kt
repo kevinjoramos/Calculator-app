@@ -130,7 +130,7 @@ class ExpandedInterfaceFragment : Fragment() {
 
         viewModel.currentHistoryList.observe(viewLifecycleOwner, Observer { recents ->
             adapter.setData(recents)
-            recyclerView.scrollToPosition(adapter.itemCount - 1) //TODO-> this workds when I apply changes but not when running.
+            recyclerView.scrollToPosition(adapter.itemCount - 1)
         })
 
         return binding.root

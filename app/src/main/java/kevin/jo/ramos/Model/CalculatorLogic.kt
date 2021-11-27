@@ -53,7 +53,6 @@ object CalculatorLogic {
             try {
                 compute()
             } catch (e: Exception) {
-                Log.i("CalculatorLogic","exception occurred: $e")
                 computationString.value = "Error"
             }
 
@@ -65,14 +64,13 @@ object CalculatorLogic {
 
 
         // when previous charter was a number, continue appending to number.
-        if (".0123456789".contains(terms.last().last())) { //breaks when deleting to TODO
+        if (".0123456789".contains(terms.last().last())) {
             terms[terms.lastIndex] += number
             TermList.value = terms
 
             try {
                 compute()
             } catch (e: Exception) {
-                Log.i("CalculatorLogic","exception occurred: $e")
                 computationString.value = "Error"
             }
             return
@@ -86,7 +84,6 @@ object CalculatorLogic {
             try {
                 compute()
             } catch (e: Exception) {
-                Log.i("CalculatorLogic","exception occurred: $e")
                 computationString.value = "Error"
             }
             return
@@ -99,7 +96,6 @@ object CalculatorLogic {
             try {
                 compute()
             } catch (e: Exception) {
-                Log.i("CalculatorLogic","exception occurred: $e")
                 computationString.value = "Error"
             }
             return
@@ -113,7 +109,6 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
     }
@@ -130,7 +125,6 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
     }
@@ -149,7 +143,6 @@ object CalculatorLogic {
             try {
                 compute()
             } catch (e: Exception) {
-                Log.i("CalculatorLogic","exception occurred: $e")
                 computationString.value = "Error"
             }
             return
@@ -164,7 +157,6 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
     }
@@ -247,7 +239,6 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
     }
@@ -270,7 +261,6 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
     }
@@ -295,13 +285,10 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
     }
-
-
-
+    
     //Utility Buttons:
     fun clear() {
         val terms = getValue() ?: return
@@ -347,7 +334,6 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
     }
@@ -374,7 +360,6 @@ object CalculatorLogic {
             try {
                 compute()
             } catch (e: Exception) {
-                Log.i("CalculatorLogic","exception occurred: $e")
                 computationString.value = "Error"
             }
             return
@@ -422,7 +407,6 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
     }
@@ -437,7 +421,6 @@ object CalculatorLogic {
         try {
             compute()
         } catch (e: Exception) {
-            Log.i("CalculatorLogic","exception occurred: $e")
             computationString.value = "Error"
         }
         updateHistoryString()
@@ -770,13 +753,6 @@ object CalculatorLogic {
             }
 
             computationValue.add(terms[i])
-
-            Log.i("CalculatorLogic",
-                "\nTermList: $terms" +
-                    "\nterm: ${terms[i]}" +
-                    "\nPOST: $computationValue" +
-                    "\nStack: $operatorStack")
-
         }
 
         if (operatorStack.isNotEmpty()) {
