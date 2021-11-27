@@ -288,7 +288,7 @@ object CalculatorLogic {
             computationString.value = "Error"
         }
     }
-    
+
     //Utility Buttons:
     fun clear() {
         val terms = getValue() ?: return
